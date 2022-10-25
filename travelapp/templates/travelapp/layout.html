@@ -24,7 +24,7 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Discover</a>
+                        <a class="nav-link" href="{% url 'discover' %}">Discover</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
@@ -49,5 +49,5 @@
 </html>
 
 {% block script %}
-    <script src="{% static 'travelapp/api_util.js' %}"></script>
+    <script type="module" src="{% static 'travelapp/main.js' %}"></script>
 {% endblock %}
