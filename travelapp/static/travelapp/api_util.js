@@ -1,5 +1,10 @@
-const apiKey = '5ae2e3f221c38a28845f05b63512826ab78d8deef6c85f58383104b4';
+import { apiKey } from "./keys.js";
 
-function apiGet(method, query) {
-    
+
+//Fetches a single destination based on the users search query
+export const searchDestination = async query => {
+    const response = await fetch(`https://api.opentripmap.com/0.1/en/places/geoname?apikey=${apiKey}&name=${query}`)
+    const result = await response.json();
+    return result;
 }
+
