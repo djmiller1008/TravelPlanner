@@ -15,6 +15,12 @@ from .models import User
 def index(request):
     return render(request, "travelapp/index.html")
 
+def discover(request):
+    return render(request, "travelapp/discover.html")
+
+def discover_destination(request, name):
+    return render(request, "travelapp/discover_destination.html")
+
 def login_view(request):
     if request.method == "POST":
 
