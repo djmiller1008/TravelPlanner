@@ -3,7 +3,13 @@
 {% block body %} 
 
 <div id="destination-container" class="destination-container">
-    Hey you made it!
+    <h1 class="destination-title" id="destination-name">{{ name }}</h1>
 </div>
+<div id="loading"></div>
+<div id="interesting-places-list">
+
+</div>
+<button id="previous-button" class="previous-button">Previous</button>
+<button id="next-button" class="next-button">Next</button>
 
 {% endblock %} 
