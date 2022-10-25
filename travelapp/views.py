@@ -19,7 +19,9 @@ def discover(request):
     return render(request, "travelapp/discover.html")
 
 def discover_destination(request, name):
-    return render(request, "travelapp/discover_destination.html")
+    return render(request, "travelapp/discover_destination.html", {
+        "name": name
+    })
 
 def login_view(request):
     if request.method == "POST":
