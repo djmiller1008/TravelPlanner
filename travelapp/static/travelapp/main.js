@@ -171,11 +171,30 @@ const createInterestingPlaceItem = item => {
         showDiv.innerHTML = '';
 
         const interestingPlaceInfo = await APIUtil.getInterestingPlaceInfo(item.properties.xid);
-
+        console.log(interestingPlaceInfo)
         
         let h1 = document.createElement('h1');
         h1.innerHTML = interestingPlaceInfo.name;
         showDiv.appendChild(h1);
+
+        let span = document.createElement('span');
+      
+        span.innerHTML = `Type: ${interestingPlaceInfo.kinds}`;
+        showDiv.appendChild(span);
+
+        if (interestingPlaceInfo.preview) {
+            let img = document.createElement('img');
+            img.src = interestingPlaceInfo.preview.source;
+            showDiv.appendChild(img);
+        }
+
+
+        // From opentripmap documentation, checks for possible descriptions 
+        showDiv.innerHTML += interestingPlaceInfo.wikipedia_extracts
+        ? interestingPlaceInfo.wikipedia_extracts.html
+        : interestingPlaceInfo.info
+        ? interestingPlaceInfo.info.descr
+        : "No description";
 
     })
 
