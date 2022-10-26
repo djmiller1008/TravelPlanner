@@ -7,6 +7,29 @@
     width: 50%;
 }
 
+.container {
+    margin: 1.5rem;
+}
+
+.search-flex {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 15rem;
+    align-items: center;
+}
+
+.search-input {
+    width: 16rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
+
+
+.h1-center {
+    text-align: center !important;
+}
+
 .interesting-place-info {
     width: 50%;
 }
