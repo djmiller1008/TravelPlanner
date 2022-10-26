@@ -1,6 +1,12 @@
+li {
+    list-style: none;
+
+}
+
 .page-container {
     display: flex;
     justify-content: space-between;
+    margin: 1.5rem;
 }
 
 .destination-info {
@@ -11,10 +17,18 @@
     margin: 1.5rem;
 }
 
+.button-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: .5rem;
+    width: 15rem;
+}
+
 .search-flex {
     display: flex;
     flex-direction: column;
     margin: auto;
+    margin-bottom: 2rem;
     width: 15rem;
     align-items: center;
 }
@@ -23,8 +37,18 @@
     width: 16rem;
     margin-top: 3rem;
     margin-bottom: 1rem;
+    padding: .25rem;
 }
 
+.list-places {
+    width: 21rem;
+}
+
+.list-places:hover {
+    cursor: pointer;
+    background-color: #0275d8;
+    color: white;
+}
 
 .h1-center {
     text-align: center !important;
@@ -32,6 +56,8 @@
 
 .interesting-place-info {
     width: 50%;
+    word-wrap: break-word;
+    margin-right: 8rem;
 }
 
 .next-button {
@@ -40,6 +66,7 @@
 
 .previous-button {
     visibility: hidden;
+    margin-left: 2rem;
 }
 
 .search-result {
