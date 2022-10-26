@@ -1,6 +1,9 @@
+body {
+    font-family: sans-serif !important;
+}
+
 li {
     list-style: none;
-
 }
 
 .page-container {
@@ -19,9 +22,9 @@ li {
 
 .button-section {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     margin-top: .5rem;
-    width: 15rem;
+    width: 21rem;
 }
 
 .search-flex {
@@ -62,11 +65,13 @@ li {
 
 .next-button {
     visibility: hidden;
+    margin-right: 1rem;
+    
 }
 
 .previous-button {
     visibility: hidden;
-    margin-left: 2rem;
+    margin-left: 1rem;
 }
 
 .search-result {
