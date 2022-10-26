@@ -88,6 +88,13 @@ const hideLoading = () => {
     loadingDiv.classList.remove('display');
 }
 
+const hideButtons = () => {
+    const nextButton = document.getElementById('next-button');
+    const previousButton = document.getElementById('previous-button');
+    nextButton.style.visibility = 'hidden';
+    previousButton.style.visibility = 'hidden';
+}
+
 const displayDestinationData = async () => {
     displayLoading()
     const destinationName = document.getElementById('destination-name').innerHTML;
@@ -132,6 +139,9 @@ const displayInterestingPlacesList = async () => {
     // Clear out previous places if any 
     const interestingPlacesDiv = document.getElementById('interesting-places-list');
     interestingPlacesDiv.innerHTML = '';
+
+    hideButtons();
+    
     displayLoading();
     interestingPlacesList = await APIUtil.searchDestinationRadius(lat, lon, radius, offset, pageLength);
     hideLoading();
@@ -140,7 +150,7 @@ const displayInterestingPlacesList = async () => {
     h3.innerHTML = 'Landmarks';
 
     interestingPlacesDiv.appendChild(h3);
-    
+
     interestingPlacesList.features.forEach(item => {
        
         if (item.properties.name !== '') {
