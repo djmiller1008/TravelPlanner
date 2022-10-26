@@ -132,15 +132,15 @@ const displayInterestingPlacesList = async () => {
     // Clear out previous places if any 
     const interestingPlacesDiv = document.getElementById('interesting-places-list');
     interestingPlacesDiv.innerHTML = '';
-
+    displayLoading();
     interestingPlacesList = await APIUtil.searchDestinationRadius(lat, lon, radius, offset, pageLength);
-
+    hideLoading();
 
     interestingPlacesList.features.forEach(item => {
        
         if (item.properties.name !== '') {
-            let li = document.createElement('li');
-            li.innerHTML = item.properties.name;
+            
+            let li = createInterestingPlaceItem(item);
             interestingPlacesDiv.appendChild(li); 
         }
     });
@@ -160,8 +160,26 @@ const displayInterestingPlacesList = async () => {
     } else {
         previousButton.style.visibility = 'hidden';
     }
+}
 
-    
+const createInterestingPlaceItem = item => {
+    let li = document.createElement('li');
+    li.innerHTML = item.properties.name;
+
+    li.addEventListener('click', async () => {
+        let showDiv = document.getElementById('interesting-place-show');
+        showDiv.innerHTML = '';
+
+        const interestingPlaceInfo = await APIUtil.getInterestingPlaceInfo(item.properties.xid);
+
+        
+        let h1 = document.createElement('h1');
+        h1.innerHTML = interestingPlaceInfo.name;
+        showDiv.appendChild(h1);
+
+    })
+
+    return li;
 }
 
 const renderSearchError = () => {
