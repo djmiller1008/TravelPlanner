@@ -136,6 +136,11 @@ const displayInterestingPlacesList = async () => {
     interestingPlacesList = await APIUtil.searchDestinationRadius(lat, lon, radius, offset, pageLength);
     hideLoading();
 
+    let h3 = document.createElement('h3');
+    h3.innerHTML = 'Landmarks';
+
+    interestingPlacesDiv.appendChild(h3);
+    
     interestingPlacesList.features.forEach(item => {
        
         if (item.properties.name !== '') {
@@ -165,6 +170,7 @@ const displayInterestingPlacesList = async () => {
 const createInterestingPlaceItem = item => {
     let li = document.createElement('li');
     li.innerHTML = item.properties.name;
+    li.className = 'list-group-item list-places';
 
     li.addEventListener('click', async () => {
         let showDiv = document.getElementById('interesting-place-show');
@@ -176,11 +182,6 @@ const createInterestingPlaceItem = item => {
         let h1 = document.createElement('h1');
         h1.innerHTML = interestingPlaceInfo.name;
         showDiv.appendChild(h1);
-
-        let span = document.createElement('span');
-      
-        span.innerHTML = `Type: ${interestingPlaceInfo.kinds}`;
-        showDiv.appendChild(span);
 
         if (interestingPlaceInfo.preview) {
             let img = document.createElement('img');
