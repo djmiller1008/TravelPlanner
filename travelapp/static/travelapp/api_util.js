@@ -14,8 +14,14 @@ export const searchDestinationRadius = async (lat, lon, radius, offset, pageLeng
     return result;
 }
 
-export const getCountOfInterestingPlaces = async(lat, lon, radius, offset, pageLength) => {
+export const getCountOfInterestingPlaces = async (lat, lon, radius, offset, pageLength) => {
     const response = await fetch(`https://api.opentripmap.com/0.1/en/places/radius?apikey=${apiKey}&limit=${pageLength}&radius=${radius}&lon=${lon}&lat=${lat}&offset=${offset}&format=count`);
     const result = await response.json();
     return result.count;
+}
+
+export const getInterestingPlaceInfo = async xid => {
+    const response = await fetch(`https://api.opentripmap.com/0.1/en/places/xid/${xid}?apikey=${apiKey}`);
+    const result = await response.json();
+    return result;
 }
