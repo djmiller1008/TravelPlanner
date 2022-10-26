@@ -1,3 +1,16 @@
+.page-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.destination-info {
+    width: 50%;
+}
+
+.interesting-place-info {
+    width: 50%;
+}
+
 .next-button {
     visibility: hidden;
 }
