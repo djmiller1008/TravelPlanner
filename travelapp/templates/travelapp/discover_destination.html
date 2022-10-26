@@ -2,18 +2,28 @@
 
 {% block body %} 
 
-<div id="destination-container" class="destination-container">
-    <h1 class="destination-title" id="destination-name">{{ name }}</h1>
-</div>
-<div id="loading"></div>
-<div id="interesting-places-list">
+<div class="page-container">
+    <section class="destination-info">
+        <div id="destination-container" class="destination-container">
+            <h1 class="destination-title" id="destination-name">{{ name }}</h1>
+        </div>
+        <div id="loading"></div>
+        <div id="interesting-places-list">
+        
+        </div>
+        <button id="previous-button" class="previous-button">Previous</button>
+        <button id="next-button" class="next-button">Next</button>
+    </section>
 
-</div>
-<button id="previous-button" class="previous-button">Previous</button>
-<button id="next-button" class="next-button">Next</button>
+    <section class="interesting-place-info">
+        <div id="interesting-place-show">
 
-<div id="interesting-place-show">
-
+        </div>
+    </section>
+    
 </div>
+
+
+
 
 {% endblock %} 
