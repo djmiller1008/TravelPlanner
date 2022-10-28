@@ -1,15 +1,13 @@
 from django.shortcuts import render
-
-from sqlite3 import connect
+from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
-import json 
-from .models import User
+import datetime 
+from .models import User, SoloTrip
 
 
 def index(request):
@@ -22,6 +20,54 @@ def discover_destination(request, name):
     return render(request, "travelapp/discover_destination.html", {
         "name": name
     })
+
+def trips(request):
+    user = User.objects.get(username=request.user.username)
+    
+    trips = user.trips.all()
+   
+   
+    return render(request, "travelapp/trips.html", {
+        "trips": trips
+    })
+
+def plan_solo_trip(request):
+    if request.method == "POST":
+        form = NewSoloTripForm(request.POST)
+        if form.is_valid():
+            destination = form.cleaned_data['destination']
+            number_of_days = form.cleaned_data['number_of_days']
+            budget = form.cleaned_data['budget']
+            trip_start_date = form.cleaned_data['trip_start_date']
+            trip_end_date = form.cleaned_data['trip_end_date']
+            user = request.user 
+            new_solo_trip = SoloTrip(destination = destination,
+                                        number_of_days=number_of_days,
+                                        budget=budget,
+                                        trip_start_date=trip_start_date,
+                                        trip_end_date=trip_end_date,
+                                        user=user)
+
+            new_solo_trip.save()
+            return HttpResponseRedirect(reverse("trips"))
+
+        else:
+            return render(request, "travelapp/solotrip.html", {
+                "trip_form": NewSoloTripForm(),
+                "message": "Invalid Entry"
+            })
+
+    return render(request, "travelapp/solotrip.html", {
+        "trip_form": NewSoloTripForm()
+    })
+
+class NewSoloTripForm(forms.Form):
+    destination = forms.CharField(label = 'Destination', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    number_of_days = forms.IntegerField(min_value=1, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    budget = forms.IntegerField(min_value=1, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    trip_start_date = forms.DateField(initial=datetime.date.today(), widget=forms.SelectDateWidget())
+    trip_end_date = forms.DateField(initial=datetime.date.today() + datetime.timedelta(days=7), widget=forms.SelectDateWidget())
+
 
 def login_view(request):
     if request.method == "POST":
