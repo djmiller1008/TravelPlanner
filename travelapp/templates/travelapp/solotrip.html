@@ -1,0 +1,26 @@
+{% extends 'travelapp/layout.html' %}
+
+{% block body %}  
+
+<div class="container">
+
+
+    <h1>Plan Your Dream Trip!</h1>
+
+    <span>
+        {% if message %} 
+            {{ message }}
+        {% endif %} 
+    </span>
+    
+    <form class="form-group" action="{% url 'plan' %}" method="post">
+        {% csrf_token %} 
+        {{ trip_form }}
+        <input type="submit" class="btn btn-primary" value="Create Trip">
+    </form>
+
+   
+</div>
+
+
+{% endblock %} 
