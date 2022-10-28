@@ -24,7 +24,13 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'plan' %}">Plan</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'discover' %}">Discover</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'trips' %}">Trips</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
