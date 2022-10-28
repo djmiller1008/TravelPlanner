@@ -1,0 +1,9 @@
+{% extends 'travelapp/layout.html' %} 
+
+{% block body %} 
+    <h1>My Trips</h1>
+
+    {% for trip in trips %} 
+        <li class="list-group-item">{{ trip.destination }}</li>
+    {% endfor %} 
+{% endblock %} 
