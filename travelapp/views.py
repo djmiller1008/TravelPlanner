@@ -33,7 +33,6 @@ def trips(request):
 
 def trip_show(request, pk):
     trip = SoloTrip.objects.get(pk=pk)
-    print(trip.number_of_days)
     number_of_days = range(1, trip.number_of_days + 1)
     return render(request, "travelapp/trip_show.html", {
         "trip": trip,
