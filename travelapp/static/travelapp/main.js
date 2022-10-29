@@ -71,7 +71,7 @@ const buildSearchDestinationListObject = data => {
     const destinationName = data.name;
 
     const a = document.createElement('a');
-    a.className = 'list-group-item search-result';
+    a.className = 'list-group-item list-highlight';
     a.innerHTML = `${destinationName}, ${countryName}`;
     a.href = `discover/${destinationName}`;
 
@@ -214,7 +214,7 @@ const createInterestingPlaceItem = item => {
 
 const renderSearchError = () => {
     const li = document.createElement('li');
-    li.className = 'list-group-item list-group-item-danger search-result'
+    li.className = 'list-group-item list-group-item-danger'
     li.innerHTML = 'No Destinations Found'
 
     document.getElementById('search-result-error').appendChild(li);
