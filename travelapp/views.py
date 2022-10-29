@@ -31,6 +31,16 @@ def trips(request):
         "trips": trips
     })
 
+def trip_show(request, pk):
+    trip = SoloTrip.objects.get(pk=pk)
+    print(trip.number_of_days)
+    number_of_days = range(1, trip.number_of_days + 1)
+    return render(request, "travelapp/trip_show.html", {
+        "trip": trip,
+        "number_of_days": number_of_days
+    }) 
+
+
 def plan_solo_trip(request):
     if request.method == "POST":
         form = NewSoloTripForm(request.POST)
@@ -40,16 +50,23 @@ def plan_solo_trip(request):
             budget = form.cleaned_data['budget']
             trip_start_date = form.cleaned_data['trip_start_date']
             trip_end_date = form.cleaned_data['trip_end_date']
+            day_delta = (trip_end_date - trip_start_date).days + 1
             user = request.user 
-            new_solo_trip = SoloTrip(destination = destination,
-                                        number_of_days=number_of_days,
-                                        budget=budget,
-                                        trip_start_date=trip_start_date,
-                                        trip_end_date=trip_end_date,
-                                        user=user)
+            if day_delta == number_of_days:
+                new_solo_trip = SoloTrip(destination = destination,
+                                            number_of_days=number_of_days,
+                                            budget=budget,
+                                            trip_start_date=trip_start_date,
+                                            trip_end_date=trip_end_date,
+                                            user=user)
 
-            new_solo_trip.save()
-            return HttpResponseRedirect(reverse("trips"))
+                new_solo_trip.save()
+                return HttpResponseRedirect(reverse("trips"))
+            else:
+                return render(request, "travelapp/solotrip.html", {
+                    "trip_form": NewSoloTripForm(),
+                    "message": f"With current trip dates, number of days should be {day_delta} days"
+                })
 
         else:
             return render(request, "travelapp/solotrip.html", {
