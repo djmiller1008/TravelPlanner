@@ -4,6 +4,6 @@
     <h1>My Trips</h1>
 
     {% for trip in trips %} 
-        <li class="list-group-item">{{ trip.destination }}</li>
+        <a href="{% url 'trip_show' trip.id %}" class="list-group-item search-result">{{ trip.destination }}</a>
     {% endfor %} 
 {% endblock %} 
