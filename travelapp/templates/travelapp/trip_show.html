@@ -1,0 +1,11 @@
+{% extends 'travelapp/layout.html' %} 
+
+{% block body %} 
+
+    <h1>{{ trip.destination }} Trip Details</h1>
+
+    {% for i in number_of_days %}
+        <section>Day {{ i }}</section> 
+    {% endfor %} 
+
+{% endblock %} 
