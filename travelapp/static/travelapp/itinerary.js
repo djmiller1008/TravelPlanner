@@ -58,7 +58,24 @@ const addCreateItineraryButton = (itinerarySection, dayNumber) => {
     createButton.style.display = 'none';
     createButton.id = `${dayNumber}-button`;
 
+    createButton.addEventListener('click', () => toggleAddItinerary(dayNumber))
+
     itinerarySection.append(createButton);
+}
+
+const toggleAddItinerary = dayNumber => {
+    let div = document.getElementById(`${dayNumber}-div`);
+    if (document.querySelector('textarea')) {
+        let textarea = document.querySelector('textarea');
+        div.removeChild(textarea);
+    } else {
+        let textarea = document.createElement('textarea');
+        textarea.className = 'add-itinerary-textarea';
+        div.insertBefore(textarea, div.firstChild);
+    }
+    
+    toggleCreateButtonText(dayNumber);
+    
 }
 
 const toggleEdit = dayNumber => {
@@ -86,6 +103,15 @@ const toggleEditButtonText = dayNumber => {
         button.innerHTML = 'Cancel';
     } else {
         button.innerHTML = 'Edit';
+    }
+}
+
+const toggleCreateButtonText = dayNumber => {
+    let button = document.getElementById(`${dayNumber}-button`);
+    if (button.innerHTML === 'Add Itinerary') {
+        button.innerHTML = 'Cancel';
+    } else {
+        button.innerHTML = 'Add Itinerary';
     }
 }
 
