@@ -1,3 +1,4 @@
+
 from django.shortcuts import render
 from django import forms
 from django.contrib.auth import authenticate, login, logout
@@ -7,30 +8,46 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import datetime 
+import json
 from .models import User, SoloTrip
 
 
 def index(request):
     return render(request, "travelapp/index.html")
 
+def solo_day_itineraries(request, trip_id):
+    trip = SoloTrip.objects.get(pk=trip_id)
+    day_itineraries = trip.daily_itinerary.all()
+    response = {}
+    for itinerary in day_itineraries:
+        response[itinerary.day_number] = itinerary.itinerary 
+    
+    json_string = json.dumps(response)
+
+    return HttpResponse(json_string, content_type="application/json")
+
+
+@login_required(login_url='login')
 def discover(request):
     return render(request, "travelapp/discover.html")
 
+@login_required(login_url='login')
 def discover_destination(request, name):
     return render(request, "travelapp/discover_destination.html", {
         "name": name
     })
 
+@login_required(login_url='login')
 def trips(request):
     user = User.objects.get(username=request.user.username)
     
     trips = user.trips.all()
    
-   
     return render(request, "travelapp/trips.html", {
         "trips": trips
     })
 
+@login_required(login_url='login')
 def trip_show(request, pk):
     trip = SoloTrip.objects.get(pk=pk)
     number_of_days = range(1, trip.number_of_days + 1)
@@ -39,7 +56,7 @@ def trip_show(request, pk):
         "number_of_days": number_of_days
     }) 
 
-
+@login_required(login_url='login')
 def plan_solo_trip(request):
     if request.method == "POST":
         form = NewSoloTripForm(request.POST)
