@@ -17,14 +17,12 @@ const getDayItineraries = async tripId => {
 
 const populateItineraries = (days, itineraries) => {
     days.forEach(day => {
-        let itinerarySection = document.createElement('section');
-        itinerarySection.style.display = 'none';
         let dayNumber = parseInt(day.id);
-        itinerarySection.id = `${dayNumber}-section`
-        itinerarySection.innerHTML = itineraries[dayNumber];
+        let itinerarySection = document.getElementById(`${dayNumber}-section`);
         
+        itinerarySection.innerHTML = itineraries[dayNumber];
         day.addEventListener('click', () => toggleItineraryShow(dayNumber))
-        day.appendChild(itinerarySection);
+    
     })
 }
 
