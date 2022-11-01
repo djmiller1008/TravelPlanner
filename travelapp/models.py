@@ -17,7 +17,7 @@ class SoloTrip(models.Model):
 class SoloDayItinerary(models.Model):
     day_number = models.IntegerField()
     trip = models.ForeignKey("SoloTrip", on_delete=models.CASCADE, related_name="daily_itinerary")
-    comment = models.TextField()
+    itinerary = models.TextField()
 
 class SoloVisitLandmark(models.Model):
     day_itinerary = models.ForeignKey("SoloDayItinerary", on_delete=models.CASCADE, related_name="landmarks")
