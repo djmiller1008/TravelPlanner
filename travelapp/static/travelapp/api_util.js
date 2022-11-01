@@ -25,3 +25,9 @@ export const getInterestingPlaceInfo = async xid => {
     const result = await response.json();
     return result;
 }
+
+export const getDayItineraries = async trip_id => {
+    const response = await fetch(`/solo_day_itineraries/${trip_id}`);
+    const result = await response.json();
+    return result;
+}
