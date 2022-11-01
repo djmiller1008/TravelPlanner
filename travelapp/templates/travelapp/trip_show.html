@@ -1,11 +1,17 @@
 {% extends 'travelapp/layout.html' %} 
+{% load static %}
 
 {% block body %} 
 
     <h1>{{ trip.destination }} Trip Details</h1>
-
+    
     {% for i in number_of_days %}
-        <section>Day {{ i }}</section> 
+        <li id="{{ i }}" data-tripid="{{ trip.id }}" class="list-group-item list-highlight day-itinerary">Day {{ i }}</li> 
     {% endfor %} 
 
+
 {% endblock %} 
+
+{% block script %}
+    <script type="module" src="{% static 'travelapp/itinerary.js' %}"></script>
+{% endblock %}
