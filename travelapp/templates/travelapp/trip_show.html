@@ -6,8 +6,11 @@
     <h1>{{ trip.destination }} Trip Details</h1>
     
     {% for i in number_of_days %}
-        <li id="{{ i }}" data-tripid="{{ trip.id }}" class="list-group-item list-highlight day-itinerary">Day {{ i }}</li>
-        <section id="{{ i }}-section" class="itinerary-section list-group-item"></section> 
+        <div id="{{ i }}" data-tripid="{{ trip.id }}" class="list-group-item list-highlight day-itinerary">Day {{ i }}</div>
+        <div id="{{ i }}-div" class="itinerary-flex">
+            <section id="{{ i }}-section" class="itinerary-section list-group-item"></section>
+        </div>
+         
     {% endfor %} 
 
 
