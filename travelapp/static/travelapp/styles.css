@@ -69,6 +69,40 @@ li {
     
 }
 
+.itinerary-section {
+    display: none;
+    border: none;
+}
+
+.submit-itinerary-button {
+    display: none;
+}
+
+
+
+.add-itinerary-textarea {
+    height: 25rem;
+    width: 20rem;
+}
+
+.edit-textarea {
+    height: 15rem;
+    width: 15rem;
+}
+
+.itinerary-button {
+    margin: 1rem;
+
+    height: 2.5rem;
+}
+
+.itinerary-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
 .previous-button {
     visibility: hidden;
     margin-left: 1rem;
