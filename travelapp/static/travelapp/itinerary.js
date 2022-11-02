@@ -41,7 +41,7 @@ const populateItineraries = (days, itineraries) => {
 
 const addEditButton = (itinerarySection, dayNumber) => {
     let editItineraryButton = document.createElement('button');
-    editItineraryButton.className = 'btn btn-primary edit-button';
+    editItineraryButton.className = 'btn btn-primary itinerary-button';
     editItineraryButton.innerHTML = 'Edit';
     editItineraryButton.style.display = 'none';
     editItineraryButton.id = `${dayNumber}-button`;
@@ -53,30 +53,42 @@ const addEditButton = (itinerarySection, dayNumber) => {
 
 const addCreateItineraryButton = (itinerarySection, dayNumber) => {
     let createButton = document.createElement('button');
-    createButton.className = 'btn btn-primary create-itinerary-button';
+    createButton.className = 'btn btn-primary itinerary-button add-itinerary-button';
     createButton.innerHTML = 'Add Itinerary';
     createButton.style.display = 'none';
     createButton.id = `${dayNumber}-button`;
 
-    createButton.addEventListener('click', () => toggleAddItinerary(dayNumber))
+    createButton.addEventListener('click', () => {
+        toggleAddItinerary(dayNumber);
+        toggleCreateButtonText(dayNumber);
+        toggleSubmitButton(dayNumber);
+    })
 
     itinerarySection.append(createButton);
 }
 
 const toggleAddItinerary = dayNumber => {
     let div = document.getElementById(`${dayNumber}-div`);
+    let section = document.getElementById(`${dayNumber}-section`);
     if (document.querySelector('textarea')) {
         let textarea = document.querySelector('textarea');
-        div.removeChild(textarea);
+        section.removeChild(textarea);
     } else {
         let textarea = document.createElement('textarea');
         textarea.className = 'add-itinerary-textarea';
-        div.insertBefore(textarea, div.firstChild);
+        section.insertBefore(textarea, section.firstChild);
     }
-    
-    toggleCreateButtonText(dayNumber);
-    
 }
+
+const toggleSubmitButton = dayNumber => {
+    let submitButton = document.getElementById(`${dayNumber}-submit`);
+    if (submitButton.style.display === 'none' || submitButton.style.display === '') {
+        submitButton.style.display = 'block';
+    } else {
+        submitButton.style.display = 'none';
+    }
+}
+
 
 const toggleEdit = dayNumber => {
     let itinerarySection = document.getElementById(`${dayNumber}-section`);
