@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import datetime 
 import json
-from .models import User, SoloTrip
+from .models import User, SoloTrip, SoloDayItinerary
 
 
 def index(request):
@@ -23,6 +23,23 @@ def solo_day_itineraries(request, trip_id):
         response[itinerary.day_number] = itinerary.itinerary 
     
     json_string = json.dumps(response)
+
+    return HttpResponse(json_string, content_type="application/json")
+
+def add_solo_day_itinerary(request):
+    json_dict = json.loads(request.body)
+    day_number = json_dict['day_number']
+    trip_id = json_dict['trip_id']
+    itinerary = json_dict['itinerary']
+
+    trip = SoloTrip.objects.get(pk=trip_id)
+
+    new_day_itinerary = SoloDayItinerary(day_number=day_number,
+                                            trip_id=trip,
+                                            itinerary=itinerary)
+    new_day_itinerary.save()
+
+    json_string = json.dumps('Success')
 
     return HttpResponse(json_string, content_type="application/json")
 
