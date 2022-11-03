@@ -1,6 +1,23 @@
 import { apiKey } from "./keys.js";
 
 
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
 //Fetches a single destination based on the users search query
 export const searchDestination = async query => {
     const response = await fetch(`https://api.opentripmap.com/0.1/en/places/geoname?apikey=${apiKey}&name=${query}`);
@@ -31,3 +48,15 @@ export const getDayItineraries = async trip_id => {
     const result = await response.json();
     return result;
 }
+
+export const createDayItinerary = async data => {
+    console.log(data);
+    const response = await fetch('/add_solo_day_itinerary', {
+        method: 'POST',
+        headers: {'X-CSRFToken': csrftoken},
+        body: JSON.stringify(data)
+    });
+    const result = await response.json();
+    return result;
+}
+
