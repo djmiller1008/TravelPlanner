@@ -8,9 +8,14 @@
     {% for i in number_of_days %}
         <div id="{{ i }}" data-tripid="{{ trip.id }}" class="list-group-item list-highlight day-itinerary">Day {{ i }}</div>
         <div id="{{ i }}-div" class="itinerary-flex">
+            
+        
             <section id="{{ i }}-section" class="itinerary-section list-group-item">
+              
                 <button id="{{ i }}-submit" class="btn btn-primary submit-itinerary-button itinerary-button">Enter</button>
             </section>
+           
+
         </div>
          
     {% endfor %} 
