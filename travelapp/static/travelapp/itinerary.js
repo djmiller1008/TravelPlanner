@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
    
     // Fetch itineraries and populate the page with those itineraries
     getDayItineraries(tripId).then(itineraries => populateItineraries(days, itineraries));
-
+    
 })
 
 const getDayItineraries = async tripId => {
@@ -62,6 +62,7 @@ const addCreateItineraryButton = (itinerarySection, dayNumber) => {
         toggleAddItinerary(dayNumber);
         toggleCreateButtonText(dayNumber);
         toggleSubmitButton(dayNumber);
+        activateSubmitButton(dayNumber);
     })
 
     itinerarySection.append(createButton);
@@ -80,10 +81,45 @@ const toggleAddItinerary = dayNumber => {
     }
 }
 
+const activateSubmitButton = (dayNumber) => {
+    let submit = document.getElementById(`${dayNumber}-submit`);
+    submit.addEventListener('click', async () => {
+        let textarea = document.querySelector('textarea');
+        // Check for value of textarea, if empty return error message,
+        // else send to api function to create itinerary
+
+        if (textarea.value === '') {
+            let errorMessage = document.createElement('span');
+            errorMessage.innerHTML = 'Please Enter Your Itinerary';
+        } else {
+            let days = Array.from(document.getElementsByClassName('day-itinerary'));
+            const tripId = days[0].dataset.tripid;
+
+            let data = {
+                day_number: dayNumber,
+                trip_id: tripId,
+                itinerary: textarea.value
+            }
+
+            APIUtil.createDayItinerary(data).then(result => {
+                if (result === 'Success') {
+                    let itinerarySection = document.getElementById(`${dayNumber}-section`);
+                    itinerarySection.innerHTML = textarea.value;
+                    addEditButton(itinerarySection, dayNumber);
+                    let button = document.getElementById(`${dayNumber}-button`);
+                    button.style.display = 'block';
+                }
+            });
+
+        }
+    })
+}
+
 const toggleSubmitButton = dayNumber => {
     let submitButton = document.getElementById(`${dayNumber}-submit`);
     if (submitButton.style.display === 'none' || submitButton.style.display === '') {
         submitButton.style.display = 'block';
+        
     } else {
         submitButton.style.display = 'none';
     }
