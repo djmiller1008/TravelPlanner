@@ -50,7 +50,6 @@ export const getDayItineraries = async trip_id => {
 }
 
 export const createDayItinerary = async data => {
-    console.log(data);
     const response = await fetch('/add_solo_day_itinerary', {
         method: 'POST',
         headers: {'X-CSRFToken': csrftoken},
