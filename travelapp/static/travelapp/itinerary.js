@@ -22,7 +22,8 @@ const populateItineraries = (days, itineraries) => {
         let dayNumber = parseInt(day.id);
         let itinerarySection = document.getElementById(`${dayNumber}-section`);
         
-        const itinerarySectionInfo = itineraries[dayNumber];
+        const itinerarySectionInfo = formatItinerary(dayNumber, itineraries[dayNumber]);
+        
         day.addEventListener('click', () => toggleItineraryShow(dayNumber))
 
         // If user hasn't added an itinerary, render a create button, else render an edit button
@@ -30,7 +31,7 @@ const populateItineraries = (days, itineraries) => {
         if (itinerarySectionInfo === undefined) {
             addCreateItineraryButton(itinerarySection, dayNumber);
         } else {
-            itinerarySection.innerHTML = itinerarySectionInfo;
+            itinerarySection.append(itinerarySectionInfo); 
             addEditButton(itinerarySection, dayNumber);
         }
         
@@ -39,12 +40,32 @@ const populateItineraries = (days, itineraries) => {
     })
 }
 
+const formatItinerary = (dayNumber, itinerary) => {
+    if (itinerary === undefined) return undefined;
+    
+    let formattedItinerary = document.createElement('div');
+    formattedItinerary.id = `${dayNumber}-itinerary-div`;
+  
+    itinerary.split('\n').map(fragment => {
+        if (fragment === '') {
+            let br = document.createElement('br');
+            formattedItinerary.appendChild(br);
+        } else {
+            let p = document.createElement('p');
+            p.innerHTML = fragment;
+            formattedItinerary.appendChild(p);
+        }
+     
+    });
+    return formattedItinerary;
+}
+
 const addEditButton = (itinerarySection, dayNumber) => {
     let editItineraryButton = document.createElement('button');
     editItineraryButton.className = 'btn btn-primary itinerary-button';
     editItineraryButton.innerHTML = 'Edit';
     editItineraryButton.style.display = 'none';
-    editItineraryButton.id = `${dayNumber}-button`;
+    editItineraryButton.id = `${dayNumber}-edit-button`;
 
     editItineraryButton.addEventListener('click', () => toggleEdit(dayNumber))
 
@@ -56,7 +77,7 @@ const addCreateItineraryButton = (itinerarySection, dayNumber) => {
     createButton.className = 'btn btn-primary itinerary-button add-itinerary-button';
     createButton.innerHTML = 'Add Itinerary';
     createButton.style.display = 'none';
-    createButton.id = `${dayNumber}-button`;
+    createButton.id = `${dayNumber}-add-button`;
 
     createButton.addEventListener('click', () => {
         toggleAddItinerary(dayNumber);
@@ -102,18 +123,41 @@ const activateSubmitButton = (dayNumber) => {
             }
 
             APIUtil.createDayItinerary(data).then(result => {
-                if (result === 'Success') {
-                    let itinerarySection = document.getElementById(`${dayNumber}-section`);
-                    itinerarySection.innerHTML = textarea.value;
-                    addEditButton(itinerarySection, dayNumber);
-                    let button = document.getElementById(`${dayNumber}-button`);
-                    button.style.display = 'block';
-                }
-            });
+                
+                let itinerarySection = document.getElementById(`${dayNumber}-section`);
+                let formattedItinerary = formatItinerary(dayNumber, result);
+                itinerarySection.appendChild(formattedItinerary);
+
+                populateItineraryAfterCreation(itinerarySection, dayNumber);
+            })
+    
 
         }
     })
 }
+
+const populateItineraryAfterCreation = (itinerarySection, dayNumber) => {
+
+    // Remove submit button 
+    let submitButton = document.getElementById(`${dayNumber}-submit`);
+    submitButton.remove();
+
+    // Remove add button
+    let addButton = document.getElementById(`${dayNumber}-add-button`);
+    addButton.remove();
+
+    // Add edit button and display it
+    addEditButton(itinerarySection, dayNumber);
+    let button = document.getElementById(`${dayNumber}-edit-button`);
+    button.style.display = 'block';
+
+    // Remove textarea from creation form
+    let textarea = document.querySelector('textarea')
+    textarea.remove();
+
+    
+}
+
 
 const toggleSubmitButton = dayNumber => {
     let submitButton = document.getElementById(`${dayNumber}-submit`);
@@ -129,24 +173,36 @@ const toggleSubmitButton = dayNumber => {
 const toggleEdit = dayNumber => {
     let itinerarySection = document.getElementById(`${dayNumber}-section`);
     let div = document.getElementById(`${dayNumber}-div`);
+    let itineraryDiv = document.getElementById(`${dayNumber}-itinerary-div`)
 
     if (document.querySelector('textarea')) {
         let textarea = document.querySelector('textarea')
-        div.removeChild(textarea);
+        textarea.remove();
         itinerarySection.style.display = 'block';
 
     } else {
-        let textArea = document.createElement('textarea');
-        textArea.innerHTML = itinerarySection.innerHTML;
-        textArea.className = 'edit-textarea'
+        let textarea = document.createElement('textarea');
+        textarea.innerHTML = unformatItinerary(itineraryDiv.innerHTML);
+        textarea.className = 'edit-textarea'
         itinerarySection.style.display = 'none';
-        div.insertBefore(textArea, div.firstChild);
+        div.insertBefore(textarea, div.firstChild);
     }
     toggleEditButtonText(dayNumber);
 }
 
+const unformatItinerary = itinerary => {
+    
+    // Replace every pair of p tags and every br tag with a newline
+    itinerary = itinerary.replaceAll('<p>', '');
+    itinerary = itinerary.replaceAll('<br>', '\n');
+    itinerary = itinerary.replaceAll('</p>', '\n');
+    
+    
+    return itinerary;
+}
+
 const toggleEditButtonText = dayNumber => {
-    let button = document.getElementById(`${dayNumber}-button`);
+    let button = document.getElementById(`${dayNumber}-edit-button`);
     if (button.innerHTML === 'Edit') {
         button.innerHTML = 'Cancel';
     } else {
@@ -155,7 +211,7 @@ const toggleEditButtonText = dayNumber => {
 }
 
 const toggleCreateButtonText = dayNumber => {
-    let button = document.getElementById(`${dayNumber}-button`);
+    let button = document.getElementById(`${dayNumber}-add-button`);
     if (button.innerHTML === 'Add Itinerary') {
         button.innerHTML = 'Cancel';
     } else {
@@ -164,11 +220,19 @@ const toggleCreateButtonText = dayNumber => {
 }
 
 const toggleItineraryShow = id => {
+    let button;
     let section = document.getElementById(`${id}-section`);
-    let button = document.getElementById(`${id}-button`);
+    let editButton = document.getElementById(`${id}-edit-button`);
+    if (editButton) {
+        button = editButton;
+    } else {
+        button = document.getElementById(`${id}-add-button`);
+    }
+    
     if (section.style.display === '' || section.style.display === 'none') {
         section.style.display = 'block';
         button.style.display = 'block';
+        
     } else {
         section.style.display = 'none';
         button.style.display = 'none';
