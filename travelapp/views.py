@@ -35,13 +35,14 @@ def add_solo_day_itinerary(request):
     trip = SoloTrip.objects.get(pk=trip_id)
 
     new_day_itinerary = SoloDayItinerary(day_number=day_number,
-                                            trip_id=trip,
+                                            trip=trip,
                                             itinerary=itinerary)
     new_day_itinerary.save()
 
-    json_string = json.dumps('Success')
+    json_string = json.dumps(new_day_itinerary.itinerary)
 
     return HttpResponse(json_string, content_type="application/json")
+
 
 
 @login_required(login_url='login')
