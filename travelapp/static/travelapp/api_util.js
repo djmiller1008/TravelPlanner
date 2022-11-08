@@ -1,7 +1,7 @@
 import { apiKey } from "./keys.js";
 
 
-function getCookie(name) {
+function getCookie(name) { 
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
@@ -59,3 +59,12 @@ export const createDayItinerary = async data => {
     return result;
 }
 
+export const editDayItinerary = async data => {
+    const response = await fetch('/edit_solo_day_itinerary', {
+        method: 'POST',
+        headers: {'X-CSRFToken': csrftoken},
+        body: JSON.stringify(data)
+    });
+    const result = response.json();
+    return result;
+}
