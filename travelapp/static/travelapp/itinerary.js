@@ -42,7 +42,10 @@ const populateItineraries = (days, itineraries) => {
 
 const formatItinerary = (dayNumber, itinerary) => {
     if (itinerary === undefined) return undefined;
-    
+    let div = document.getElementById(`${dayNumber}-itinerary-div`);
+    if (div) {
+        div.remove();
+    }
     let formattedItinerary = document.createElement('div');
     formattedItinerary.id = `${dayNumber}-itinerary-div`;
   
@@ -92,12 +95,13 @@ const addCreateItineraryButton = (itinerarySection, dayNumber) => {
 const toggleAddItinerary = dayNumber => {
     let div = document.getElementById(`${dayNumber}-div`);
     let section = document.getElementById(`${dayNumber}-section`);
-    if (document.querySelector('textarea')) {
-        let textarea = document.querySelector('textarea');
+    if (document.getElementById(`${dayNumber}-add-itinerary-textarea`)) {
+        let textarea = document.getElementById(`${dayNumber}-add-itinerary-textarea`);
         section.removeChild(textarea);
     } else {
         let textarea = document.createElement('textarea');
         textarea.className = 'add-itinerary-textarea';
+        textarea.id = `${dayNumber}-add-itinerary-textarea`;
         section.insertBefore(textarea, section.firstChild);
     }
 }
@@ -105,13 +109,21 @@ const toggleAddItinerary = dayNumber => {
 const activateSubmitButton = (dayNumber) => {
     let submit = document.getElementById(`${dayNumber}-submit`);
     submit.addEventListener('click', async () => {
-        let textarea = document.querySelector('textarea');
+        let textarea = document.getElementById(`${dayNumber}-add-itinerary-textarea`);
         // Check for value of textarea, if empty return error message,
         // else send to api function to create itinerary
 
-        if (textarea.value === '') {
+        if (textarea.value.replace(/\n/g, '') === '') {
             let errorMessage = document.createElement('span');
             errorMessage.innerHTML = 'Please Enter Your Itinerary';
+
+            let div = document.getElementById(`${dayNumber}`);
+            div.appendChild(errorMessage);
+
+            setTimeout(() => {
+                errorMessage.remove();
+            }, 3000);
+
         } else {
             let days = Array.from(document.getElementsByClassName('day-itinerary'));
             const tripId = days[0].dataset.tripid;
@@ -152,10 +164,23 @@ const populateItineraryAfterCreation = (itinerarySection, dayNumber) => {
     button.style.display = 'block';
 
     // Remove textarea from creation form
-    let textarea = document.querySelector('textarea')
+    let textarea = document.getElementById(`${dayNumber}-add-itinerary-textarea`)
+    textarea.remove();
+}
+
+const populateItineraryAfterEdit = (itinerarySection, dayNumber) => {
+    // Remove textarea from edit form
+    let textarea = document.getElementById(`${dayNumber}-edit-textarea`)
     textarea.remove();
 
-    
+
+    // Remove submit edit button 
+    let button = document.getElementById(`${dayNumber}-submit-edit-button`)
+    button.remove();
+
+    toggleEditButtonText(dayNumber);
+    toggleItineraryShow(dayNumber);
+
 }
 
 
@@ -175,19 +200,69 @@ const toggleEdit = dayNumber => {
     let div = document.getElementById(`${dayNumber}-div`);
     let itineraryDiv = document.getElementById(`${dayNumber}-itinerary-div`)
 
-    if (document.querySelector('textarea')) {
-        let textarea = document.querySelector('textarea')
+    if (document.getElementById(`${dayNumber}-edit-textarea`)) {
+        let textarea = document.getElementById(`${dayNumber}-edit-textarea`)
         textarea.remove();
+
+        let submitButton = document.getElementById(`${dayNumber}-submit-edit-button`);
+        submitButton.remove();
+        
         itinerarySection.style.display = 'block';
 
     } else {
         let textarea = document.createElement('textarea');
+        let submitButton = document.createElement('button');
+        submitButton.id = `${dayNumber}-submit-edit-button`;
+        submitButton.className = 'btn btn-primary';
+        submitButton.innerHTML = 'Enter';
+        activateSubmitEditButton(dayNumber, submitButton);
         textarea.innerHTML = unformatItinerary(itineraryDiv.innerHTML);
         textarea.className = 'edit-textarea'
+        textarea.id = `${dayNumber}-edit-textarea`;
         itinerarySection.style.display = 'none';
         div.insertBefore(textarea, div.firstChild);
+        div.after(submitButton);
     }
     toggleEditButtonText(dayNumber);
+}
+
+const activateSubmitEditButton = (dayNumber, button) => {
+
+    button.addEventListener('click', () => {
+        let textarea = document.querySelector('textarea');
+       
+        if (textarea.value.replace(/\n/g, '') === '') {
+
+            let errorMessage = document.createElement('span');
+            errorMessage.innerHTML = 'Itinerary Cannot Be Blank';
+
+            let div = document.getElementById(`${dayNumber}`);
+            div.appendChild(errorMessage);
+
+            setTimeout(() => {
+                errorMessage.remove()
+            }, 3000);
+
+        } else {
+            let days = Array.from(document.getElementsByClassName('day-itinerary'));
+            const tripId = days[0].dataset.tripid;
+
+            let data = {
+                day_number: dayNumber,
+                trip_id: tripId,
+                itinerary: textarea.value
+            }
+
+            APIUtil.editDayItinerary(data).then(result => {
+                let itinerarySection = document.getElementById(`${dayNumber}-section`);
+                let formattedItinerary = formatItinerary(dayNumber, result);
+                itinerarySection.appendChild(formattedItinerary);
+
+                populateItineraryAfterEdit(itinerarySection, dayNumber);
+            })
+
+        }
+    })
 }
 
 const unformatItinerary = itinerary => {
@@ -221,16 +296,20 @@ const toggleCreateButtonText = dayNumber => {
 
 const toggleItineraryShow = id => {
     let button;
-    let textarea = document.querySelector('textarea');
+    let textarea = document.getElementById(`${id}-edit-textarea`);
     if (textarea) {
         if (textarea.style.display !== 'none') {
             textarea.style.display = 'none';
             button = document.getElementById(`${id}-edit-button`);
             button.style.display = 'none';
+            let submitButton = document.getElementById(`${id}-submit-edit-button`);
+            submitButton.style.display = 'none';
         } else {
             textarea.style.display = 'block';
             button = document.getElementById(`${id}-edit-button`);
             button.style.display = 'block';
+            let submitButton = document.getElementById(`${id}-submit-edit-button`);
+            submitButton.style.display = 'block';
         
         }
     } else {
