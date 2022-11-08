@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
             renderSearchError();
         }
         })
-    } else {
+    } else if (document.getElementById('destination-name')) {
         // We are on the destination info page
         displayDestinationData();
 
