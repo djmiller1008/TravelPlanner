@@ -221,20 +221,36 @@ const toggleCreateButtonText = dayNumber => {
 
 const toggleItineraryShow = id => {
     let button;
-    let section = document.getElementById(`${id}-section`);
-    let editButton = document.getElementById(`${id}-edit-button`);
-    if (editButton) {
-        button = editButton;
-    } else {
-        button = document.getElementById(`${id}-add-button`);
-    }
-    
-    if (section.style.display === '' || section.style.display === 'none') {
-        section.style.display = 'block';
-        button.style.display = 'block';
+    let textarea = document.querySelector('textarea');
+    if (textarea) {
+        if (textarea.style.display !== 'none') {
+            textarea.style.display = 'none';
+            button = document.getElementById(`${id}-edit-button`);
+            button.style.display = 'none';
+        } else {
+            textarea.style.display = 'block';
+            button = document.getElementById(`${id}-edit-button`);
+            button.style.display = 'block';
         
+        }
     } else {
-        section.style.display = 'none';
-        button.style.display = 'none';
+        let section = document.getElementById(`${id}-section`);
+        let editButton = document.getElementById(`${id}-edit-button`);
+        if (editButton) {
+            button = editButton;
+        } else {
+            button = document.getElementById(`${id}-add-button`);
+        }
+        
+        if (section.style.display === '' || section.style.display === 'none') {
+            section.style.display = 'block';
+            button.style.display = 'block';
+            
+        } else {
+            section.style.display = 'none';
+            button.style.display = 'none';
+        }
     }
+
+    
 }
