@@ -43,6 +43,21 @@ def add_solo_day_itinerary(request):
 
     return HttpResponse(json_string, content_type="application/json")
 
+def edit_solo_day_itinerary(request):
+    json_dict = json.loads(request.body)
+    day_number = json_dict['day_number']
+    trip_id = json_dict['trip_id']
+    editted_itinerary = json_dict['itinerary']
+
+    trip = SoloTrip.objects.get(pk=trip_id)
+    itinerary = SoloDayItinerary.objects.get(trip=trip, day_number=day_number)
+
+    itinerary.itinerary = editted_itinerary
+    itinerary.save()
+
+    json_string = json.dumps(itinerary.itinerary)
+
+    return HttpResponse(json_string, content_type="application/json")
 
 
 @login_required(login_url='login')
