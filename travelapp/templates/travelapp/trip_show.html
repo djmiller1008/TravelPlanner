@@ -20,9 +20,22 @@
          
     {% endfor %} 
 
+    <button id="delete-trip-modal-button" class="btn btn-danger delete-trip-modal-button">Delete Trip</button>
 
+    <div id="delete-trip-modal" class="delete-trip-modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close-modal">&times;</span>
+            <span class="modal-span">Are you sure you want to delete your {{ trip.destination }} trip?</span>
+            <section class="modal-button-section">
+                <button id="yes-delete" class="btn btn-danger">Yes</button>
+                <button id="not-delete" class="btn btn-primary">No</button>
+            </section>
+        </div>
+        
+    </div>
 {% endblock %} 
 
 {% block script %}
     <script type="module" src="{% static 'travelapp/itinerary.js' %}"></script>
 {% endblock %}
+
