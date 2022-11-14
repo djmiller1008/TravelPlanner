@@ -187,7 +187,6 @@ const createInterestingPlaceItem = item => {
         showDiv.innerHTML = '';
 
         const interestingPlaceInfo = await APIUtil.getInterestingPlaceInfo(item.properties.xid);
-        console.log(interestingPlaceInfo)
         
         let h1 = document.createElement('h1');
         h1.innerHTML = interestingPlaceInfo.name;
