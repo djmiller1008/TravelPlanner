@@ -13,5 +13,6 @@ urlpatterns = [
     path("trips/<int:pk>", views.trip_show, name="trip_show"),
     path("solo_day_itineraries/<int:trip_id>", views.solo_day_itineraries, name="solo_day_itineraries"),
     path("add_solo_day_itinerary", views.add_solo_day_itinerary, name="add_solo_day_itinerary"),
-    path("edit_solo_day_itinerary", views.edit_solo_day_itinerary, name="edit_solo_day_itinerary")
+    path("edit_solo_day_itinerary", views.edit_solo_day_itinerary, name="edit_solo_day_itinerary"),
+    path("delete_solo_trip/<int:trip_id>", views.delete_solo_trip, name="delete_solo_trip")
 ]
