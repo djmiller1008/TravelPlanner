@@ -8,8 +8,47 @@ document.addEventListener("DOMContentLoaded", () => {
    
     // Fetch itineraries and populate the page with those itineraries
     getDayItineraries(tripId).then(itineraries => populateItineraries(days, itineraries));
-    
+    activateModal(tripId);
+
+    window.onclick = event => {
+        let modal = document.getElementById('delete-trip-modal');
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
 })
+
+const activateModal = tripId => {
+    let deleteModalButton = document.getElementById('delete-trip-modal-button');
+    let modal = document.getElementById('delete-trip-modal');
+    deleteModalButton.addEventListener('click', () => {
+        if (modal.style.display === 'none' || modal.style.display == '') {
+            modal.style.display = 'block';
+        }
+    });
+
+    let closeModal = document.getElementById('close-modal');
+    closeModal.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    let notDeleteButton = document.getElementById('not-delete');
+    notDeleteButton.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    let yesDeleteButton = document.getElementById('yes-delete');
+    yesDeleteButton.addEventListener('click', async () => {
+        const result = await APIUtil.deleteSoloTrip(tripId);
+        if (result === 'Success') {
+
+            // Redirect to trips page 
+            location.href = '/trips'
+        }
+    })
+}
+
+
 
 const getDayItineraries = async tripId => {
     const result = await APIUtil.getDayItineraries(tripId);
@@ -234,6 +273,7 @@ const activateSubmitEditButton = (dayNumber, button) => {
         if (textarea.value.replace(/\n/g, '') === '') {
 
             let errorMessage = document.createElement('span');
+            errorMessage.className = 'itinerary-error';
             errorMessage.innerHTML = 'Itinerary Cannot Be Blank';
 
             let div = document.getElementById(`${dayNumber}`);
