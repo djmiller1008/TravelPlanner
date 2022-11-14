@@ -59,6 +59,14 @@ def edit_solo_day_itinerary(request):
 
     return HttpResponse(json_string, content_type="application/json")
 
+def delete_solo_trip(request, trip_id):
+    trip = SoloTrip.objects.get(pk=trip_id)
+    trip.delete()
+    success_message = json.dumps('Success')
+    return HttpResponse(success_message, content_type="application/json")
+    
+
+
 
 @login_required(login_url='login')
 def discover(request):
