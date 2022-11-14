@@ -57,6 +57,15 @@ li {
     color: white;
 }
 
+.trip-details-header {
+    margin-bottom: 1.5rem;
+}
+
+.trip-info-section {
+    display: flex;
+    flex-direction: column;
+}
+
 .h1-center {
     text-align: center !important;
 }
