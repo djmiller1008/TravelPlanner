@@ -68,3 +68,9 @@ export const editDayItinerary = async data => {
     const result = response.json();
     return result;
 }
+
+export const deleteSoloTrip = async trip_id => {
+    const response = await fetch(`/delete_solo_trip/${trip_id}`);
+    const result = response.json();
+    return result;
+}
