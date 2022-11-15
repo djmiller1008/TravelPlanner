@@ -1,4 +1,5 @@
 {% extends 'travelapp/layout.html' %}
+{% load static %}
 
 {% block body %}  
 
@@ -12,14 +13,20 @@
         
     </span>
     
-    <form class="form-group" action="{% url 'plan' %}" method="post">
+    <form id="trip-form" class="form-group" action="{% url 'plan' %}" method="post">
         {% csrf_token %} 
         {{ trip_form }}
-        <input type="submit" class="btn btn-primary" value="Create Trip">
-    </form>
+        <input type="hidden" name="lat">
+        <input type="hidden" name="lon">
+        <button id="create-trip-button" class="btn btn-primary">Create Trip</button>
+    </form> 
 
    
 </div>
 
 
 {% endblock %} 
+
+{% block script %}
+    <script type="module" src="{% static 'travelapp/plan.js' %}"></script>
+{% endblock %}
