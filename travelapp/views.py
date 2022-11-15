@@ -99,8 +99,10 @@ def trip_show(request, pk):
 
 @login_required(login_url='login')
 def plan_solo_trip(request):
+    
     if request.method == "POST":
         form = NewSoloTripForm(request.POST)
+        
         if form.is_valid():
             destination = form.cleaned_data['destination']
             number_of_days = form.cleaned_data['number_of_days']
@@ -108,6 +110,8 @@ def plan_solo_trip(request):
             trip_start_date = form.cleaned_data['trip_start_date']
             trip_end_date = form.cleaned_data['trip_end_date']
             day_delta = (trip_end_date - trip_start_date).days + 1
+            lat = float(request.POST['lat'])
+            lon = float(request.POST['lon'])
             user = request.user 
             if day_delta == number_of_days:
                 new_solo_trip = SoloTrip(destination = destination,
@@ -115,7 +119,9 @@ def plan_solo_trip(request):
                                             budget=budget,
                                             trip_start_date=trip_start_date,
                                             trip_end_date=trip_end_date,
-                                            user=user)
+                                            user=user,
+                                            lat=lat,
+                                            lon=lon)
 
                 new_solo_trip.save()
                 return HttpResponseRedirect(reverse("trips"))
