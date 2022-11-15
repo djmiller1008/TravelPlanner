@@ -13,16 +13,27 @@
     
     {% for i in number_of_days %}
         <div id="{{ i }}" data-tripid="{{ trip.id }}" class="list-group-item list-highlight day-itinerary">Day {{ i }}</div>
-        <div id="{{ i }}-div" class="itinerary-flex">
-            
-        
-            <section id="{{ i }}-section" class="itinerary-section list-group-item">
-              
-                <button id="{{ i }}-submit" class="btn btn-primary submit-itinerary-button itinerary-button">Enter</button>
-            </section>
-           
+            <div class="itinerary-content">
+                <div id="{{ i }}-div" class="itinerary-flex">
+                    
+                
+                    <section id="{{ i }}-section" class="itinerary-section list-group-item">
+                    
+                        <button id="{{ i }}-submit" class="btn btn-primary submit-itinerary-button itinerary-button">Enter</button>
+                    </section>
+                    <div class="edit-buttons-div" id="{{ i }}-edit-buttons-div">
 
-        </div>
+                    </div>
+
+                </div>
+                <div class="landmark-area-div" id="{{ i }}-landmark-area-div">
+                    <div class="landmark-area-content">
+                        <button id="{{ i }}-add-landmark-button" class="btn btn-primary add-landmark-button">Add Landmark</button>
+                    </div>
+                   
+
+                </div>
+            </div>
          
     {% endfor %} 
 
