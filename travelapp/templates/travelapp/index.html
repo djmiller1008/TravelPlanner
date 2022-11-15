@@ -1,7 +1,57 @@
 {% extends 'travelapp/layout.html' %} 
 
 {% block body %} 
-    <div id="test">
-        hi
+    <div>
+        <div class="image-container">
+            <h1 class="home-page-h1 first-line">Wanna get away?</h1>
+            <h1 class="home-page-h1 second-line">Start Planning Your Trip Now!</h1>
+            <img class="home-page-image" src="../../static/travelapp/images/beach.webp">
+        </div>
+        <div class="home-page-content-container">
+            <section class="feature-section">
+                <h2 class="home-page-h2">Features</h2>
+                <div class="feature-description">
+                    <div class="feature-detail">
+                        <i class="bi bi-calendar icon"></i>
+                        <span class="icon-caption">Manage Trip Dates</span>
+                    </div>
+                    <div class="feature-detail">
+                        <i class="bi bi-globe icon"></i>
+                        <span class="icon-caption">Discover Destinations</span>
+                    </div>
+                    <div class="feature-detail">
+                        <i class="bi bi-journal-richtext icon"></i>
+                        <span class="icon-caption">Track Daily Itineraries</span>
+                    </div>
+                    <div class="feature-detail">
+                        <i class="bi bi-cash-stack icon"></i>
+                        <span class="icon-caption">Budget and Currency Exchange</span>
+                    </div>
+                </div>
+                
+            </section>
+            <section class="benefits-section">
+                <h2 class="home-page-h2">Trip Planner Benefits</h2>
+                <div class="discover-benefits">
+                    <img class="discover-image" src="../../static/travelapp/images/discover-image.png">
+                    <div class="benefit-details">
+                        <h3 class="home-page-h3">Discover</h3>
+                        <p class="benefit-details-p">Discover top destinations and various tourist destinations around them</p>
+                    </div>
+                </div>
+                <div class="discover-benefits">
+                    <div class="benefit-details">
+                        <h3 class="home-page-h3">Manage</h3>
+                        <p class="benefit-details-p">Manage the details of your trip in one convenient place</p>
+                    </div>
+                    <img class="discover-image" src="../../static/travelapp/images/trip-details-image.png">
+                </div>
+            </section>
+        </div>
+
+        <footer>
+
+        </footer>
+        
     </div>
 {% endblock %} 
