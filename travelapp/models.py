@@ -13,6 +13,9 @@ class SoloTrip(models.Model):
     trip_start_date = models.DateField()
     trip_end_date = models.DateField()
     number_of_days = models.IntegerField()
+    lat = models.DecimalField(max_digits=13, decimal_places=10)
+    lon = models.DecimalField(max_digits=13, decimal_places=10)
+   
 
 class SoloDayItinerary(models.Model):
     day_number = models.IntegerField()
