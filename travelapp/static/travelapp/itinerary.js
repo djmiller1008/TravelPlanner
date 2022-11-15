@@ -10,13 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
     getDayItineraries(tripId).then(itineraries => populateItineraries(days, itineraries));
     activateModal(tripId);
 
+    // If the user clicks the modal, close the modal
     window.onclick = event => {
         let modal = document.getElementById('delete-trip-modal');
         if (event.target == modal) {
             modal.style.display = 'none';
         }
     }
+
 })
+
 
 const activateModal = tripId => {
     let deleteModalButton = document.getElementById('delete-trip-modal-button');
@@ -103,15 +106,16 @@ const formatItinerary = (dayNumber, itinerary) => {
 }
 
 const addEditButton = (itinerarySection, dayNumber) => {
+    let editButtonsDiv = document.getElementById(`${dayNumber}-edit-buttons-div`);
     let editItineraryButton = document.createElement('button');
-    editItineraryButton.className = 'btn btn-primary itinerary-button';
+    editItineraryButton.className = 'btn btn-primary edit-itinerary-button';
     editItineraryButton.innerHTML = 'Edit';
     editItineraryButton.style.display = 'none';
     editItineraryButton.id = `${dayNumber}-edit-button`;
 
     editItineraryButton.addEventListener('click', () => toggleEdit(dayNumber))
 
-    itinerarySection.after(editItineraryButton);
+    editButtonsDiv.appendChild(editItineraryButton);
 }
 
 const addCreateItineraryButton = (itinerarySection, dayNumber) => {
@@ -180,11 +184,29 @@ const activateSubmitButton = (dayNumber) => {
                 itinerarySection.appendChild(formattedItinerary);
 
                 populateItineraryAfterCreation(itinerarySection, dayNumber);
+                toggleLandmarkSection(dayNumber);
             })
     
 
         }
     })
+}
+
+const toggleLandmarkSection = dayNumber => {
+    let itineraryDiv = document.getElementById(`${dayNumber}-itinerary-div`);
+    if (itineraryDiv) {
+        let div = document.getElementById(`${dayNumber}-landmark-area-div`);
+        if (div.style.display === 'block') {
+            div.style.display = 'none';
+        } else {
+            div.style.display = 'block';
+        }
+    }
+}
+
+const activateAddLandmarkButton = dayNumber => {
+    let landmarkButton = document.getElementById(`${dayNumber}-add-landmark-button`);
+    
 }
 
 const populateItineraryAfterCreation = (itinerarySection, dayNumber) => {
@@ -238,6 +260,7 @@ const toggleEdit = dayNumber => {
     let itinerarySection = document.getElementById(`${dayNumber}-section`);
     let div = document.getElementById(`${dayNumber}-div`);
     let itineraryDiv = document.getElementById(`${dayNumber}-itinerary-div`)
+    let editButtonsDiv = document.getElementById(`${dayNumber}-edit-buttons-div`);
 
     if (document.getElementById(`${dayNumber}-edit-textarea`)) {
         let textarea = document.getElementById(`${dayNumber}-edit-textarea`)
@@ -252,7 +275,7 @@ const toggleEdit = dayNumber => {
         let textarea = document.createElement('textarea');
         let submitButton = document.createElement('button');
         submitButton.id = `${dayNumber}-submit-edit-button`;
-        submitButton.className = 'btn btn-primary';
+        submitButton.className = 'btn btn-primary submit-edit-button';
         submitButton.innerHTML = 'Enter';
         activateSubmitEditButton(dayNumber, submitButton);
         textarea.innerHTML = unformatItinerary(itineraryDiv.innerHTML);
@@ -260,7 +283,7 @@ const toggleEdit = dayNumber => {
         textarea.id = `${dayNumber}-edit-textarea`;
         itinerarySection.style.display = 'none';
         div.insertBefore(textarea, div.firstChild);
-        div.after(submitButton);
+        editButtonsDiv.appendChild(submitButton);
     }
     toggleEditButtonText(dayNumber);
 }
@@ -370,6 +393,5 @@ const toggleItineraryShow = id => {
             button.style.display = 'none';
         }
     }
-
-    
+    toggleLandmarkSection(id);
 }
