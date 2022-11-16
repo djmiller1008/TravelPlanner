@@ -131,12 +131,11 @@ const addCreateItineraryButton = (itinerarySection, dayNumber) => {
         toggleSubmitButton(dayNumber);
         activateSubmitButton(dayNumber);
     })
-
-    itinerarySection.append(createButton);
+    let div = document.getElementById(`${dayNumber}-edit-buttons-div`);
+    div.insertBefore(createButton, div.firstChild);
 }
 
 const toggleAddItinerary = dayNumber => {
-    let div = document.getElementById(`${dayNumber}-div`);
     let section = document.getElementById(`${dayNumber}-section`);
     if (document.getElementById(`${dayNumber}-add-itinerary-textarea`)) {
         let textarea = document.getElementById(`${dayNumber}-add-itinerary-textarea`);
