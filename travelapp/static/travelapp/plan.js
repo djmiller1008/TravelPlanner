@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
         const destination = document.querySelectorAll('input')[1].value;
         const result = await APIUtil.searchDestination(destination);
-        console.log(result);
         
         if (result.partial_match === true) {
             alert('Invalid Destination');
