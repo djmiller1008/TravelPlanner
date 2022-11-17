@@ -1,4 +1,22 @@
 import * as APIUtil from './api_util.js';
+import * as MAINUtil from './main.js';
+
+// Keep radius at 1000 meters
+const radius = 1000;
+
+// Limit for interesting places search results
+const pageLength = 8;
+
+// Define variables for latitude and longitude
+let lat;
+let lon;
+
+// Initial offset for pagination of intersting places
+let offset = 0;
+
+// Define variable for keeping track of how many interesting places are returned
+// Using this variable for pagination
+let count;
 
 document.addEventListener("DOMContentLoaded", () => {
     // Get trip id so we can fetch the itineraries from the backend
@@ -18,7 +36,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Add listeners for next and previous button pagination
+
+    
+
 })
+
+const activatePagButtons = dayNumber => {
+    document.getElementById('next-button')
+    .addEventListener('click', () => {
+        offset += pageLength;
+        displayInterestingPlacesList(dayNumber);
+    });
+
+    document.getElementById('previous-button')
+        .addEventListener('click', () => {
+            offset -= pageLength;
+            displayInterestingPlacesList(dayNumber);
+        })
+}
 
 
 const activateModal = tripId => {
@@ -184,6 +220,7 @@ const activateSubmitButton = (dayNumber) => {
 
                 populateItineraryAfterCreation(itinerarySection, dayNumber);
                 toggleLandmarkSection(dayNumber);
+                
             })
     
 
@@ -195,18 +232,102 @@ const toggleLandmarkSection = dayNumber => {
     let itineraryDiv = document.getElementById(`${dayNumber}-itinerary-div`);
     if (itineraryDiv) {
         let div = document.getElementById(`${dayNumber}-landmark-area-div`);
-        if (div.style.display === 'block') {
+        if (div.style.display === 'flex') {
             div.style.display = 'none';
         } else {
-            div.style.display = 'block';
+            div.style.display = 'flex';
+            activateAddLandmarkButton(dayNumber);
+            // Activate next and previous buttons
+            activatePagButtons(dayNumber);
         }
     }
 }
 
-const activateAddLandmarkButton = dayNumber => {
-    let landmarkButton = document.getElementById(`${dayNumber}-add-landmark-button`);
-    
+const toggleLandmarkContentArea = dayNumber => {
+    let landmarkContentDiv = document.getElementById(`${dayNumber}-landmark-area-content`);
+    if (landmarkContentDiv.style.display === 'none' || landmarkContentDiv.style.display === '') {
+        landmarkContentDiv.style.display = 'flex';
+    } else {
+        landmarkContentDiv.style.display = 'none';
+
+    }
 }
+
+const activateAddLandmarkButton = async dayNumber => {
+    let landmarkButton = document.getElementById(`${dayNumber}-add-landmark-button`);
+    let dataDiv = document.getElementById(`${dayNumber}`);
+    lat = dataDiv.dataset.lat; 
+    lon = dataDiv.dataset.lon;
+    count = await APIUtil.getCountOfInterestingPlaces(lat, lon, radius, offset, pageLength);
+   
+    landmarkButton.addEventListener('click', async () => {
+        if (document.getElementById(`${dayNumber}-interesting-places-list`).querySelector('li') === null) {
+            toggleAddLandmarkButton(landmarkButton, dayNumber);
+            toggleLandmarkContentArea(dayNumber);
+            await displayInterestingPlacesList(dayNumber);
+            
+        } else {
+            cancelAddLandmark(dayNumber);
+            toggleAddLandmarkButton(landmarkButton, dayNumber);
+        }
+        
+    })
+}
+
+const toggleAddLandmarkButton = (landmarkButton, dayNumber) => {
+    if (landmarkButton.innerHTML === 'Add Landmark') {
+        landmarkButton.className = 'btn btn-danger add-landmark-button';
+        landmarkButton.innerHTML = 'Cancel';
+    } else {
+        landmarkButton.className = 'btn btn-primary add-landmark-button'
+        landmarkButton.innerHTML = 'Add Landmark';
+    }
+}
+
+const cancelAddLandmark = dayNumber => {
+    let interestingPlacesDiv = document.getElementById(`${dayNumber}-interesting-places-list`);
+    interestingPlacesDiv.querySelectorAll('li').forEach(li => li.remove());
+    toggleLandmarkContentArea(dayNumber);
+}
+
+const displayInterestingPlacesList = async dayNumber => {
+    // Clear out previous places if any 
+    const interestingPlacesDiv = document.getElementById(`${dayNumber}-interesting-places-list`);
+    
+    interestingPlacesDiv.querySelectorAll('li').forEach(li => li.remove());
+
+
+    MAINUtil.displayLoading();
+    const result = await APIUtil.searchDestinationRadius(lat, lon, radius, offset, pageLength);
+    MAINUtil.hideLoading();
+    
+    result.features.forEach(item => {
+        if (item.properties.name !== '') {
+            const listItem = MAINUtil.createInterestingPlaceItem(item);
+            
+            interestingPlacesDiv.insertBefore(listItem, interestingPlacesDiv.firstChild);
+            
+        }
+    })
+
+    let nextButton = document.getElementById('next-button');
+    let previousButton = document.getElementById('previous-button');
+
+    if (count > offset + pageLength) {
+    
+        nextButton.style.visibility = 'visible';
+    } else {
+        nextButton.style.visibility = 'hidden';
+    }
+
+    if (offset !== 0) {
+        previousButton.style.visibility = 'visible';
+    } else {
+        previousButton.style.visibility = 'hidden';
+    }
+
+}
+
 
 const populateItineraryAfterCreation = (itinerarySection, dayNumber) => {
 
@@ -393,4 +514,5 @@ const toggleItineraryShow = id => {
         }
     }
     toggleLandmarkSection(id);
+    
 }
