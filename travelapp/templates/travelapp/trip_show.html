@@ -12,7 +12,7 @@
     
     
     {% for i in number_of_days %}
-        <div id="{{ i }}" data-tripid="{{ trip.id }}" class="list-group-item list-highlight day-itinerary">Day {{ i }}</div>
+        <div id="{{ i }}" data-tripid="{{ trip.id }}" data-lat="{{ trip.lat }}" data-lon="{{ trip.lon }}" class="list-group-item list-highlight day-itinerary">Day {{ i }}</div>
             <div class="itinerary-content">
                 <div id="{{ i }}-div" class="itinerary-flex">
                     
@@ -27,8 +27,29 @@
 
                 </div>
                 <div class="landmark-area-div" id="{{ i }}-landmark-area-div">
-                    <div class="landmark-area-content">
+                    <div class="button-and-loading">
                         <button id="{{ i }}-add-landmark-button" class="btn btn-primary add-landmark-button">Add Landmark</button>
+                    </div>
+                    
+                    <div id="{{ i }}-landmark-area-content" class="landmark-area-content">
+                        <div class="list-and-pag-buttons">
+                            <div id="loading" class="trip-loading"></div>
+                            
+                            <div id="{{ i }}-interesting-places-list" class="interesting-places-list">
+                                <section id="button-section" class="button-section">
+                                    <button id="previous-button" class="btn btn-primary previous-button trip-show-pag-button">Previous</button>
+                                    <button id="next-button" class="btn btn-primary next-button trip-show-pag-button">Next</button>
+                                </section>
+                            </div>
+                           
+                        </div>
+                       
+                        <section class="interesting-place-info trip-page-interesting-place-info">
+                            <div id="interesting-place-show">
+                    
+                            </div>
+                        </section>
+                        
                     </div>
                    
 
