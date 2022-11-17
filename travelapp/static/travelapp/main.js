@@ -78,17 +78,17 @@ const buildSearchDestinationListObject = data => {
     document.getElementById('discover-search-result').appendChild(a);
 }
 
-const displayLoading = () => {
+export const displayLoading = () => {
     const loadingDiv = document.getElementById('loading');
     loadingDiv.classList.add('display');   
 }
 
-const hideLoading = () => {
+export const hideLoading = () => {
     const loadingDiv = document.getElementById('loading');
     loadingDiv.classList.remove('display');
 }
 
-const hideButtons = () => {
+export const hideButtons = () => {
     const nextButton = document.getElementById('next-button');
     const previousButton = document.getElementById('previous-button');
     nextButton.style.visibility = 'hidden';
@@ -132,10 +132,10 @@ const displayDestinationData = async () => {
 
     document.getElementById('destination-container').appendChild(dataSection);
 
-    displayInterestingPlacesList(count);
+    displayInterestingPlacesList();
 }
 
-const displayInterestingPlacesList = async () => {
+export const displayInterestingPlacesList = async () => {
     // Clear out previous places if any 
     const interestingPlacesDiv = document.getElementById('interesting-places-list');
     interestingPlacesDiv.innerHTML = '';
@@ -177,7 +177,7 @@ const displayInterestingPlacesList = async () => {
     }
 }
 
-const createInterestingPlaceItem = item => {
+export const createInterestingPlaceItem = item => {
     let li = document.createElement('li');
     li.innerHTML = item.properties.name;
     li.className = 'list-group-item list-places';
