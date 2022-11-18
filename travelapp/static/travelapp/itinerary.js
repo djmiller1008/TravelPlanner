@@ -249,7 +249,6 @@ const toggleLandmarkContentArea = dayNumber => {
         landmarkContentDiv.style.display = 'flex';
     } else {
         landmarkContentDiv.style.display = 'none';
-
     }
 }
 
@@ -303,10 +302,8 @@ const displayInterestingPlacesList = async dayNumber => {
     
     result.features.forEach(item => {
         if (item.properties.name !== '') {
-            const listItem = MAINUtil.createInterestingPlaceItem(item);
-            
+            const listItem = createInterestingPlaceItem(item, dayNumber);
             interestingPlacesDiv.insertBefore(listItem, interestingPlacesDiv.firstChild);
-            
         }
     })
 
@@ -325,7 +322,62 @@ const displayInterestingPlacesList = async dayNumber => {
     } else {
         previousButton.style.visibility = 'hidden';
     }
+}
 
+const createInterestingPlaceItem = (item, dayNumber) => {
+    let li = document.createElement('li');
+    li.innerHTML = item.properties.name;
+    li.className = 'list-group-item list-places';
+
+    li.addEventListener('click', async () => {
+        
+        toggleInterestingPlaceInfoSection(dayNumber);
+        let showDiv = document.getElementById(`${dayNumber}-interesting-place-show`);
+        showDiv.innerHTML = '';
+        displayInfoLoading();
+        const interestingPlaceInfo = await APIUtil.getInterestingPlaceInfo(item.properties.xid);
+        hideInfoLoading();
+        let h1 = document.createElement('h1');
+        h1.innerHTML = interestingPlaceInfo.name;
+        showDiv.appendChild(h1);
+
+        if (interestingPlaceInfo.preview) {
+            let img = document.createElement('img');
+            img.src = interestingPlaceInfo.preview.source;
+            showDiv.appendChild(img);
+        }
+
+        // From opentripmap documentation, checks for possible descriptions 
+        showDiv.innerHTML += interestingPlaceInfo.wikipedia_extracts
+        ? interestingPlaceInfo.wikipedia_extracts.html
+        : interestingPlaceInfo.info
+        ? interestingPlaceInfo.info.descr
+        : "No description";
+
+        let section = document.getElementById(`${dayNumber}-interesting-place-section`);
+        section.style.display = 'block';
+
+    })
+    return li;
+}
+
+export const displayInfoLoading = () => {
+    const loadingDiv = document.getElementsByClassName('itinerary-landmark-info-loading')[0];
+    loadingDiv.classList.add('display');   
+}
+
+export const hideInfoLoading = () => {
+    const loadingDiv = document.getElementsByClassName('itinerary-landmark-info-loading')[0];
+    loadingDiv.classList.remove('display');
+}
+
+const toggleInterestingPlaceInfoSection = dayNumber => {
+    let section = document.getElementById(`${dayNumber}-interesting-place-section`);
+    if (section.style.displaydisplay === 'none' !== section.style.display === '') {
+        section.style.display = 'block';
+    } else {
+        section.style.display = 'none';
+    }
 }
 
 
