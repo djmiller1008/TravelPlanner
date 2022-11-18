@@ -177,7 +177,7 @@ export const displayInterestingPlacesList = async () => {
     }
 }
 
-export const createInterestingPlaceItem = item => {
+const createInterestingPlaceItem = item => {
     let li = document.createElement('li');
     li.innerHTML = item.properties.name;
     li.className = 'list-group-item list-places';
@@ -197,7 +197,6 @@ export const createInterestingPlaceItem = item => {
             img.src = interestingPlaceInfo.preview.source;
             showDiv.appendChild(img);
         }
-
 
         // From opentripmap documentation, checks for possible descriptions 
         showDiv.innerHTML += interestingPlaceInfo.wikipedia_extracts
