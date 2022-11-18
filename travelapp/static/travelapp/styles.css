@@ -254,14 +254,19 @@ li {
 }
 
 
-
 .button-and-loading {
     display: flex;
     flex-direction: column;
 }
 
+.trip-page-landmark-info-div {
+    position: relative;
+}
+
 .trip-page-interesting-place-info {
-    margin-right: 2rem !important; 
+    display: none;
+    margin-right: 0 !important;
+    margin-left: 4rem;
 }
 
 .interesting-places-list {
@@ -276,6 +281,13 @@ li {
 
 .trip-show-pag-button {
     margin: 0.5rem;
+}
+
+.itinerary-landmark-info-loading {
+    position: absolute;
+    top: 30%;
+    left: 5rem;
+    
 }
 
 .delete-trip-modal-button {
