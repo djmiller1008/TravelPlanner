@@ -15,6 +15,21 @@ from .models import User, SoloTrip, SoloDayItinerary, SoloVisitLandmark
 def index(request):
     return render(request, "travelapp/index.html")
 
+def solo_visit_trip_landmarks(request, trip_id, day_number):
+    landmarks = SoloVisitLandmark.objects.filter(trip=trip_id)
+    if landmarks.exists() == False:
+            json_string = json.dumps('No Landmarks Added Yet')
+            return HttpResponse(json_string, content_type="application/json")
+    else:
+        response = {}
+        for landmark in landmarks:
+            if landmark.day_itinerary.day_number == day_number:
+                response[landmark.name] = landmark.xid
+    
+        json_string = json.dumps(response)
+        return HttpResponse(json_string, content_type="application/json")
+    
+
 def add_solo_trip_landmark(request):
     json_dict = json.loads(request.body)
     name = json_dict['name']
