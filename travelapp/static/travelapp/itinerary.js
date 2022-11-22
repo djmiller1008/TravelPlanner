@@ -20,13 +20,15 @@ let count;
 
 document.addEventListener("DOMContentLoaded", () => {
     // Get trip id so we can fetch the itineraries from the backend
-
     let days = Array.from(document.getElementsByClassName('day-itinerary'));
     const tripId = days[0].dataset.tripid;
    
     // Fetch itineraries and populate the page with those itineraries
     getDayItineraries(tripId).then(itineraries => populateItineraries(days, itineraries));
     activateModal(tripId);
+
+    // Add listeners to create landmark buttons
+    activateCreateLandmarkButtons(tripId);
 
     // If the user clicks the modal, close the modal
     window.onclick = event => {
@@ -35,12 +37,29 @@ document.addEventListener("DOMContentLoaded", () => {
             modal.style.display = 'none';
         }
     }
+});
 
-    // Add listeners for next and previous button pagination
+const activateCreateLandmarkButtons = (tripId) => {
+    let buttons = document.getElementsByClassName('btn btn-primary create-visit-landmark-button');
+    Array.from(buttons).forEach(button => {
+        button.addEventListener('click', async () => {
+            const h1 = document.getElementById('interesting-place-h1');
 
-    
+            const data = {
+                name: h1.innerHTML,
+                xid: h1.dataset.xid,
+                day_number: h1.parentElement.id[0],
+                trip_id: tripId
+            }
+            let result = await APIUtil.addSoloTripLandmark(data);
+            console.log(result);
+           
 
-})
+
+
+        })
+    })
+}
 
 const activatePagButtons = dayNumber => {
     document.getElementById('next-button')
@@ -80,7 +99,6 @@ const activateModal = tripId => {
     yesDeleteButton.addEventListener('click', async () => {
         const result = await APIUtil.deleteSoloTrip(tripId);
         if (result === 'Success') {
-
             // Redirect to trips page 
             location.href = '/trips'
         }
@@ -107,10 +125,10 @@ const populateItineraries = (days, itineraries) => {
         // If user hasn't added an itinerary, render a create button, else render an edit button
         // We need the dayNumber to add a specific id to the button that we can later use in the click listener
         if (itinerarySectionInfo === undefined) {
-            addCreateItineraryButton(itinerarySection, dayNumber);
+            addCreateItineraryButton(dayNumber);
         } else {
             itinerarySection.append(itinerarySectionInfo); 
-            addEditButton(itinerarySection, dayNumber);
+            addEditButton(dayNumber);
         }
         
      
@@ -141,7 +159,7 @@ const formatItinerary = (dayNumber, itinerary) => {
     return formattedItinerary;
 }
 
-const addEditButton = (itinerarySection, dayNumber) => {
+const addEditButton = (dayNumber) => {
     let editButtonsDiv = document.getElementById(`${dayNumber}-edit-buttons-div`);
     let editItineraryButton = document.createElement('button');
     editItineraryButton.className = 'btn btn-primary edit-itinerary-button';
@@ -154,7 +172,7 @@ const addEditButton = (itinerarySection, dayNumber) => {
     editButtonsDiv.appendChild(editItineraryButton);
 }
 
-const addCreateItineraryButton = (itinerarySection, dayNumber) => {
+const addCreateItineraryButton = (dayNumber) => {
     let createButton = document.createElement('button');
     createButton.className = 'btn btn-primary itinerary-button add-itinerary-button';
     createButton.innerHTML = 'Add Itinerary';
@@ -213,7 +231,6 @@ const activateSubmitButton = (dayNumber) => {
             }
 
             APIUtil.createDayItinerary(data).then(result => {
-                
                 let itinerarySection = document.getElementById(`${dayNumber}-section`);
                 let formattedItinerary = formatItinerary(dayNumber, result);
                 itinerarySection.appendChild(formattedItinerary);
@@ -267,13 +284,13 @@ const activateAddLandmarkButton = async dayNumber => {
             
         } else {
             cancelAddLandmark(dayNumber);
-            toggleAddLandmarkButton(landmarkButton, dayNumber);
+            toggleAddLandmarkButton(landmarkButton);
         }
         
     })
 }
 
-const toggleAddLandmarkButton = (landmarkButton, dayNumber) => {
+const toggleAddLandmarkButton = (landmarkButton) => {
     if (landmarkButton.innerHTML === 'Add Landmark') {
         landmarkButton.className = 'btn btn-danger add-landmark-button';
         landmarkButton.innerHTML = 'Cancel';
@@ -338,7 +355,9 @@ const createInterestingPlaceItem = (item, dayNumber) => {
         const interestingPlaceInfo = await APIUtil.getInterestingPlaceInfo(item.properties.xid);
         hideInfoLoading();
         let h1 = document.createElement('h1');
+        h1.id = `interesting-place-h1`;
         h1.innerHTML = interestingPlaceInfo.name;
+        h1.dataset.xid = interestingPlaceInfo.xid;
         showDiv.appendChild(h1);
 
         if (interestingPlaceInfo.preview) {
@@ -392,7 +411,7 @@ const populateItineraryAfterCreation = (itinerarySection, dayNumber) => {
     addButton.remove();
 
     // Add edit button and display it
-    addEditButton(itinerarySection, dayNumber);
+    addEditButton(dayNumber);
     let button = document.getElementById(`${dayNumber}-edit-button`);
     button.style.display = 'block';
 
@@ -501,13 +520,10 @@ const activateSubmitEditButton = (dayNumber, button) => {
 }
 
 const unformatItinerary = itinerary => {
-    
     // Replace every pair of p tags and every br tag with a newline
     itinerary = itinerary.replaceAll('<p>', '');
     itinerary = itinerary.replaceAll('<br>', '\n');
     itinerary = itinerary.replaceAll('</p>', '\n');
-    
-    
     return itinerary;
 }
 
@@ -566,5 +582,4 @@ const toggleItineraryShow = id => {
         }
     }
     toggleLandmarkSection(id);
-    
 }
