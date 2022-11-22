@@ -24,11 +24,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const tripId = days[0].dataset.tripid;
    
     // Fetch itineraries and populate the page with those itineraries
-    getDayItineraries(tripId).then(itineraries => populateItineraries(days, itineraries));
+    getDayItineraries(tripId).then(itineraries => populateItineraries(days, itineraries, tripId));
     activateModal(tripId);
 
     // Add listeners to create landmark buttons
     activateCreateLandmarkButtons(tripId);
+
+
 
     // If the user clicks the modal, close the modal
     window.onclick = event => {
@@ -44,7 +46,7 @@ const activateCreateLandmarkButtons = (tripId) => {
     Array.from(buttons).forEach(button => {
         button.addEventListener('click', async () => {
             const h1 = document.getElementById('interesting-place-h1');
-
+            const dayNumber = parseInt(h1.parentElement.id[0]);
             const data = {
                 name: h1.innerHTML,
                 xid: h1.dataset.xid,
@@ -52,23 +54,27 @@ const activateCreateLandmarkButtons = (tripId) => {
                 trip_id: tripId
             }
             let result = await APIUtil.addSoloTripLandmark(data);
-            console.log(result);
+
+            // Landmark has been successfully added
            
-
-
-
+            if (result === h1.innerHTML) {
+                let ul = document.getElementById(`${dayNumber}-landmarks-to-visit-ul`);
+                let li = document.createElement('li');
+                li.innerHTML = result;
+                ul.appendChild(li);
+            }
         })
     })
 }
 
 const activatePagButtons = dayNumber => {
-    document.getElementById('next-button')
+    document.getElementById(`${dayNumber}-next-button`)
     .addEventListener('click', () => {
         offset += pageLength;
         displayInterestingPlacesList(dayNumber);
     });
 
-    document.getElementById('previous-button')
+    document.getElementById(`${dayNumber}-previous-button`)
         .addEventListener('click', () => {
             offset -= pageLength;
             displayInterestingPlacesList(dayNumber);
@@ -113,15 +119,18 @@ const getDayItineraries = async tripId => {
 }
 
 // Populate sections with itinerary info and appropriate buttons
-const populateItineraries = (days, itineraries) => {
+const populateItineraries = (days, itineraries, tripId) => {
     days.forEach(day => {
         let dayNumber = parseInt(day.id);
         let itinerarySection = document.getElementById(`${dayNumber}-section`);
         
         const itinerarySectionInfo = formatItinerary(dayNumber, itineraries[dayNumber]);
         
-        day.addEventListener('click', () => toggleItineraryShow(dayNumber))
+        day.addEventListener('click', () => {
+            toggleItineraryShow(dayNumber);
+        });
 
+        
         // If user hasn't added an itinerary, render a create button, else render an edit button
         // We need the dayNumber to add a specific id to the button that we can later use in the click listener
         if (itinerarySectionInfo === undefined) {
@@ -130,10 +139,33 @@ const populateItineraries = (days, itineraries) => {
             itinerarySection.append(itinerarySectionInfo); 
             addEditButton(dayNumber);
         }
-        
-     
-    
+        addLandmarksToVisit(tripId, dayNumber);
+
+        // Activate these buttons only once 
+        // Activate add landmark button
+        activateAddLandmarkButton(dayNumber);
+         // Activate next and previous buttons
+        activatePagButtons(dayNumber);
     })
+}
+
+const addLandmarksToVisit = async (tripId, dayNumber) => {
+    const landmarksToVisit = await APIUtil.getSoloTripLandmarks(tripId, dayNumber);
+    let landmarksToVisitContent = document.getElementById(`${dayNumber}-landmarks-to-visit-content`);
+    if (landmarksToVisit === 'No Landmarks Added Yet' || Object.keys(landmarksToVisit).length === 0) {
+        let span = document.createElement('span');
+        span.innerHTML = 'No Landmarks Added Yet';
+        landmarksToVisitContent.appendChild(span);
+    } else {
+        let ul = document.getElementById(`${dayNumber}-landmarks-to-visit-ul`);
+        Object.keys(landmarksToVisit).forEach(name => {
+            let li = document.createElement('li');
+            li.innerHTML = name;
+            ul.appendChild(li);
+        })
+        landmarksToVisitContent.appendChild(ul);
+    }
+    
 }
 
 const formatItinerary = (dayNumber, itinerary) => {
@@ -253,9 +285,6 @@ const toggleLandmarkSection = dayNumber => {
             div.style.display = 'none';
         } else {
             div.style.display = 'flex';
-            activateAddLandmarkButton(dayNumber);
-            // Activate next and previous buttons
-            activatePagButtons(dayNumber);
         }
     }
 }
@@ -277,6 +306,7 @@ const activateAddLandmarkButton = async dayNumber => {
     count = await APIUtil.getCountOfInterestingPlaces(lat, lon, radius, offset, pageLength);
    
     landmarkButton.addEventListener('click', async () => {
+        
         if (document.getElementById(`${dayNumber}-interesting-places-list`).querySelector('li') === null) {
             toggleAddLandmarkButton(landmarkButton, dayNumber);
             toggleLandmarkContentArea(dayNumber);
@@ -324,8 +354,8 @@ const displayInterestingPlacesList = async dayNumber => {
         }
     })
 
-    let nextButton = document.getElementById('next-button');
-    let previousButton = document.getElementById('previous-button');
+    let nextButton = document.getElementById(`${dayNumber}-next-button`);
+    let previousButton = document.getElementById(`${dayNumber}-previous-button`);
 
     if (count > offset + pageLength) {
     
@@ -547,6 +577,7 @@ const toggleCreateButtonText = dayNumber => {
 
 const toggleItineraryShow = id => {
     let button;
+    let landmarksToVisitDiv = document.getElementById(`${id}-landmarks-to-visit`);
     let textarea = document.getElementById(`${id}-edit-textarea`);
     if (textarea) {
         if (textarea.style.display !== 'none') {
@@ -575,10 +606,12 @@ const toggleItineraryShow = id => {
         if (section.style.display === '' || section.style.display === 'none') {
             section.style.display = 'block';
             button.style.display = 'block';
+            landmarksToVisitDiv.style.display = 'block';
             
         } else {
             section.style.display = 'none';
             button.style.display = 'none';
+            landmarksToVisitDiv.style.display = 'none';
         }
     }
     toggleLandmarkSection(id);
