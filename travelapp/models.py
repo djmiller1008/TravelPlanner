@@ -24,6 +24,7 @@ class SoloDayItinerary(models.Model):
 
 class SoloVisitLandmark(models.Model):
     day_itinerary = models.ForeignKey("SoloDayItinerary", on_delete=models.CASCADE, related_name="landmarks")
+    trip = models.ForeignKey("SoloTrip", on_delete=models.CASCADE, related_name="trips")
     xid = models.CharField(max_length=10)
     name = models.CharField(max_length=64)
     
