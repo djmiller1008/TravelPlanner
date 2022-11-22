@@ -6,7 +6,6 @@ function getCookie(name) {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
             const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
@@ -70,6 +69,16 @@ export const editDayItinerary = async data => {
 
 export const deleteSoloTrip = async trip_id => {
     const response = await fetch(`/delete_solo_trip/${trip_id}`);
+    const result = response.json();
+    return result;
+}
+
+export const addSoloTripLandmark = async data => {
+    const response = await fetch('/add_solo_trip_landmark', {
+        method: 'POST',
+        headers: {'X-CSRFToken': csrftoken},
+        body: JSON.stringify(data)
+    });
     const result = response.json();
     return result;
 }
