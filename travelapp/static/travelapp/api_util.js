@@ -82,3 +82,9 @@ export const addSoloTripLandmark = async data => {
     const result = response.json();
     return result;
 }
+
+export const getSoloTripLandmarks = async (tripId, dayNumber) => {
+    const response = await fetch(`/solo_visit_trip_landmarks/${tripId}/${dayNumber}`);
+    const result = response.json();
+    return result;
+}
