@@ -9,11 +9,33 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import datetime 
 import json
-from .models import User, SoloTrip, SoloDayItinerary
+from .models import User, SoloTrip, SoloDayItinerary, SoloVisitLandmark
 
 
 def index(request):
     return render(request, "travelapp/index.html")
+
+def add_solo_trip_landmark(request):
+    json_dict = json.loads(request.body)
+    name = json_dict['name']
+    day_number = json_dict['day_number']
+    xid = json_dict['xid']
+    trip_id = json_dict['trip_id']
+
+    trip = SoloTrip.objects.get(pk=trip_id)
+    day_itinerary = SoloDayItinerary.objects.get(trip=trip, day_number=day_number)
+
+    new_solo_visit_landmark = SoloVisitLandmark(
+        day_itinerary=day_itinerary,
+        name=name,
+        trip=trip,
+        xid=xid
+    )
+
+    new_solo_visit_landmark.save()
+    json_string = json.dumps(new_solo_visit_landmark.name)
+    return HttpResponse(json_string, content_type="application/json")
+
 
 def solo_day_itineraries(request, trip_id):
     trip = SoloTrip.objects.get(pk=trip_id)
