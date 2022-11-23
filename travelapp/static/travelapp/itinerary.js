@@ -58,10 +58,7 @@ const activateCreateLandmarkButtons = (tripId) => {
             // Landmark has been successfully added
            
             if (result === h1.innerHTML) {
-                let ul = document.getElementById(`${dayNumber}-landmarks-to-visit-ul`);
-                let li = document.createElement('li');
-                li.innerHTML = result;
-                ul.appendChild(li);
+                addLandmarksToVisit(tripId, dayNumber);
             }
         })
     })
@@ -142,30 +139,52 @@ const populateItineraries = (days, itineraries, tripId) => {
         addLandmarksToVisit(tripId, dayNumber);
 
         // Activate these buttons only once 
+
         // Activate add landmark button
         activateAddLandmarkButton(dayNumber);
          // Activate next and previous buttons
         activatePagButtons(dayNumber);
+        // Activate clear landmarks button
+        activateClearLandmarksButton(tripId, dayNumber);
     })
+}
+
+const activateClearLandmarksButton = (tripId, dayNumber) => {
+    let clearLandmarksButton = document.getElementById(`${dayNumber}-clear-landmarks-button`);
+    clearLandmarksButton.addEventListener('click', async () => {
+        const response = await APIUtil.deleteSoloTripLandmarks(tripId, dayNumber);
+        if (response === 'Success') {
+            addLandmarksToVisit(tripId, dayNumber);
+        } 
+    }) 
+}
+
+const showClearLandmarksButton = dayNumber => {
+    let clearLandmarksButton = document.getElementById(`${dayNumber}-clear-landmarks-button`);
+    clearLandmarksButton.style.display = 'block';
+}
+
+const hideClearLandmarksButton = dayNumber => {
+    let clearLandmarksButton = document.getElementById(`${dayNumber}-clear-landmarks-button`);
+    clearLandmarksButton.style.display = 'none';
 }
 
 const addLandmarksToVisit = async (tripId, dayNumber) => {
     const landmarksToVisit = await APIUtil.getSoloTripLandmarks(tripId, dayNumber);
     let landmarksToVisitContent = document.getElementById(`${dayNumber}-landmarks-to-visit-content`);
-    if (landmarksToVisit === 'No Landmarks Added Yet' || Object.keys(landmarksToVisit).length === 0) {
-        let span = document.createElement('span');
-        span.innerHTML = 'No Landmarks Added Yet';
-        landmarksToVisitContent.appendChild(span);
-    } else {
-        let ul = document.getElementById(`${dayNumber}-landmarks-to-visit-ul`);
+    let ul = document.getElementById(`${dayNumber}-landmarks-to-visit-ul`);
+    ul.innerHTML = '';
+    if (Object.keys(landmarksToVisit).length > 0 && landmarksToVisit !== 'None') {
         Object.keys(landmarksToVisit).forEach(name => {
             let li = document.createElement('li');
             li.innerHTML = name;
             ul.appendChild(li);
         })
         landmarksToVisitContent.appendChild(ul);
+        showClearLandmarksButton(dayNumber);
+    } else {
+        hideClearLandmarksButton(dayNumber);
     }
-    
 }
 
 const formatItinerary = (dayNumber, itinerary) => {
@@ -602,17 +621,19 @@ const toggleItineraryShow = id => {
         } else {
             button = document.getElementById(`${id}-add-button`);
         }
-        
+        let itineraryDiv = document.getElementById(`${id}-itinerary-div`)
         if (section.style.display === '' || section.style.display === 'none') {
             section.style.display = 'block';
             button.style.display = 'block';
-            landmarksToVisitDiv.style.display = 'block';
-            
+            if (itineraryDiv) {
+                landmarksToVisitDiv.style.display = 'block';
+            }
         } else {
             section.style.display = 'none';
             button.style.display = 'none';
             landmarksToVisitDiv.style.display = 'none';
         }
+      
     }
     toggleLandmarkSection(id);
 }
