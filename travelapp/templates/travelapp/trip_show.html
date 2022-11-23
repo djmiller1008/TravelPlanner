@@ -28,21 +28,24 @@
 
                 </div>
                 <div class="landmarks-to-visit" id="{{ i }}-landmarks-to-visit">
-                    <h2>Landmarks To Visit</h2>
+                    <h3 class="landmarks-header">Landmarks To Visit</h3>
                     <section class="landmarks-to-visit-content" id="{{ i }}-landmarks-to-visit-content">
                         <ul class="landmarks-to-visit-ul" id="{{ i }}-landmarks-to-visit-ul">
                             
                         </ul>
                     </section>
-                </div>
-                <div class="landmark-area-div" id="{{ i }}-landmark-area-div">
                     <div class="button-and-loading">
                         <button id="{{ i }}-add-landmark-button" class="btn btn-primary add-landmark-button">Add Landmark</button>
+                        <button id="{{ i }}-clear-landmarks-button" class="btn btn-danger clear-landmarks-button">Clear</button>
+                        <span id="{{ i }}-landmarks-error" class="landmarks-error"></span>
                     </div>
+                </div>
+                <div class="landmark-area-div" id="{{ i }}-landmark-area-div">
                     
                     <div id="{{ i }}-landmark-area-content" class="landmark-area-content">
+                        <div id="loading" class="trip-loading"></div>
                         <div class="list-and-pag-buttons">
-                            <div id="loading" class="trip-loading"></div>
+                            
                             
                             <div id="{{ i }}-interesting-places-list" class="interesting-places-list">
                                 <section id="button-section" class="button-section">
@@ -50,7 +53,7 @@
                                     <button id="{{ i }}-next-button" class="btn btn-primary next-button trip-show-pag-button">Next</button>
                                 </section>
                             </div>
-                           
+                            
                         </div>
                        
                         <div class="trip-page-landmark-info-div">
