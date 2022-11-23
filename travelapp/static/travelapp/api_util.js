@@ -59,7 +59,7 @@ export const createDayItinerary = async data => {
 
 export const editDayItinerary = async data => {
     const response = await fetch('/edit_solo_day_itinerary', {
-        method: 'POST',
+        method: 'PUT',
         headers: {'X-CSRFToken': csrftoken},
         body: JSON.stringify(data)
     });
@@ -85,6 +85,12 @@ export const addSoloTripLandmark = async data => {
 
 export const getSoloTripLandmarks = async (tripId, dayNumber) => {
     const response = await fetch(`/solo_visit_trip_landmarks/${tripId}/${dayNumber}`);
+    const result = response.json();
+    return result;
+}
+
+export const deleteSoloTripLandmarks = async (tripId, dayNumber) => {
+    const response = await fetch(`/delete_solo_trip_landmarks/${tripId}/${dayNumber}`);
     const result = response.json();
     return result;
 }
