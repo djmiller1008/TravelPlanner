@@ -353,6 +353,11 @@ const cancelAddLandmark = dayNumber => {
     let interestingPlacesDiv = document.getElementById(`${dayNumber}-interesting-places-list`);
     interestingPlacesDiv.querySelectorAll('li').forEach(li => li.remove());
     toggleLandmarkContentArea(dayNumber);
+
+    let nextButton = document.getElementById(`${dayNumber}-next-button`);
+    let previousButton = document.getElementById(`${dayNumber}-previous-button`);
+    nextButton.style.visibility = 'hidden';
+    previousButton.style.visibility = 'hidden';
 }
 
 const displayInterestingPlacesList = async dayNumber => {
@@ -365,7 +370,7 @@ const displayInterestingPlacesList = async dayNumber => {
     MAINUtil.displayLoading();
     const result = await APIUtil.searchDestinationRadius(lat, lon, radius, offset, pageLength);
     MAINUtil.hideLoading();
-    
+   
     result.features.forEach(item => {
         if (item.properties.name !== '') {
             const listItem = createInterestingPlaceItem(item, dayNumber);
@@ -377,7 +382,6 @@ const displayInterestingPlacesList = async dayNumber => {
     let previousButton = document.getElementById(`${dayNumber}-previous-button`);
 
     if (count > offset + pageLength) {
-    
         nextButton.style.visibility = 'visible';
     } else {
         nextButton.style.visibility = 'hidden';
