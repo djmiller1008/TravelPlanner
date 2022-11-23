@@ -217,13 +217,16 @@ li {
 .edit-itinerary-button {
    height: 2.5rem;
    width: 4rem;
-   margin-left: 2rem;
    margin-bottom: 2.5rem;
 }
 
 .submit-edit-button {
     height: 2.5rem;
     width: 4rem;
+}
+
+.landmarks-header {
+    text-align: center;
 }
 
 .itinerary-flex {
@@ -279,9 +282,16 @@ li {
 }
 
 .add-landmark-button {
-    margin-top: 3rem;
-    height: 2.5rem;
-    width: 8rem;
+    margin: auto;
+    margin-bottom: 1rem;
+}
+
+.clear-landmarks-button {
+    margin: auto;
+    margin-bottom: 1rem;
+    font-size: .85rem;
+    display: none;
+
 }
 
 .trip-show-pag-button {
