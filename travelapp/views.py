@@ -18,7 +18,7 @@ def index(request):
 def solo_visit_trip_landmarks(request, trip_id, day_number):
     landmarks = SoloVisitLandmark.objects.filter(trip=trip_id)
     if landmarks.exists() == False:
-            json_string = json.dumps('No Landmarks Added Yet')
+            json_string = json.dumps('None')
             return HttpResponse(json_string, content_type="application/json")
     else:
         response = {}
@@ -28,6 +28,18 @@ def solo_visit_trip_landmarks(request, trip_id, day_number):
     
         json_string = json.dumps(response)
         return HttpResponse(json_string, content_type="application/json")
+    
+def delete_solo_trip_landmarks(request, trip_id, day_number):
+    day_itinerary = SoloDayItinerary.objects.get(trip=trip_id, day_number=day_number)
+    landmarks = SoloVisitLandmark.objects.filter(trip=trip_id, day_itinerary=day_itinerary)
+    if landmarks.exists():
+        landmarks.delete()
+        json_string = json.dumps('Success')
+        return HttpResponse(json_string, content_type="application/json")
+    else:
+        json_string = json.dumps('You haven\'t added any landmarks!')
+        return HttpResponse(json_string, content_type="application/json")
+    
     
 
 def add_solo_trip_landmark(request):
