@@ -15,6 +15,9 @@ from .models import User, SoloTrip, SoloDayItinerary, SoloVisitLandmark
 def index(request):
     return render(request, "travelapp/index.html")
 
+def add_day_budget(request, solo_day_itinerary_id):
+    pass 
+
 def solo_visit_trip_landmarks(request, trip_id, day_number):
     landmarks = SoloVisitLandmark.objects.filter(trip=trip_id)
     if landmarks.exists() == False:
