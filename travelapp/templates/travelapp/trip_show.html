@@ -13,7 +13,7 @@
     
     {% for i in number_of_days %}
         <div id="{{ i }}" data-tripid="{{ trip.id }}" data-lat="{{ trip.lat }}" data-lon="{{ trip.lon }}" class="list-group-item list-highlight day-itinerary">Day {{ i }}</div>
-            <div class="itinerary-content">
+            <div id="{{ i }}-itinerary-content" class="itinerary-content">
                 <div id="{{ i }}-div" class="itinerary-flex">
                     
                 
@@ -21,9 +21,24 @@
                     
                         
                     </section>
-                    <div class="edit-buttons-div" id="{{ i }}-edit-buttons-div">
+                    <div id="{{ i }}-create-itinerary-buttons-div" class="create-itinerary-buttons-div">
+                        <button class="btn btn-primary itinerary-button add-itinerary-button" id="{{ i }}-add-itinerary-button">Add Itinerary</button>
                         <button id="{{ i }}-submit" class="btn btn-primary submit-itinerary-button itinerary-button">Enter</button>
                     </div>
+                    
+                    <div class="edit-buttons-div" id="{{ i }}-edit-buttons-div">
+                        
+                        <button id="{{ i }}-cancel-edit-button" class="btn btn-primary cancel-edit-button">Cancel</button>
+                        <button id="{{ i }}-submit-edit-button" class="btn btn-primary submit-edit-button">Enter</button>
+                        
+                    </div>
+                    <section class="budget-section" id="{{ i }}-budget-section">
+                        <div class="budget-flex">
+                            <span>Day Budget: </span>
+                            <input type="number" class="budget-input">
+                        </div>
+                        <button class="btn btn-primary add-budget" id="{{ i }}-add-budget-button">Enter Budget</button>
+                    </section>
         
 
                 </div>
