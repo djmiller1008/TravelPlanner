@@ -154,7 +154,76 @@ const populateItineraries = (days, itineraries, tripId) => {
          // Activate cancel edit button
          let cancelButton = document.getElementById(`${dayNumber}-cancel-edit-button`);
          cancelButton.addEventListener('click', () => toggleEdit(dayNumber));
+
+         // Activate add budget button
+         activateEnterBudgetButton(tripId, dayNumber);
+
+         // Display budget if there is one, display an input if not
+         let budget = itineraries[`budget_${dayNumber}`];
+         displayBudget(dayNumber, budget);
+
     })
+}
+
+const activateEnterBudgetButton = (tripId, dayNumber) => {
+    let budgetButton = document.getElementById(`${dayNumber}-add-budget-button`);
+    budgetButton.addEventListener('click', async () => {
+        let data = document.getElementById(`${dayNumber}-budget-input`).value;
+        if (data.length === 0) {
+            let span = document.createElement('span');
+            span.innerHTML = 'Invalid Entry';
+            span.className = 'itinerary-error';
+
+            let div = document.getElementById(`${dayNumber}`);
+            div.appendChild(span);
+
+            setTimeout(() => {
+                span.remove();
+            }, 3000);
+            
+        } else {
+            const response = await APIUtil.addDayBudget(tripId, dayNumber, data);
+            if (response === 'Success') {
+                toggleAddBudget(dayNumber);
+            }
+        }
+        
+    })
+}
+
+const displayBudget = (dayNumber, budget) => {
+    if (budget > 0) {
+        // User has entered a budget, display it and add a click listener to edit the budget
+        let budgetSpan = document.getElementById(`${dayNumber}-budget-span`);
+        budgetSpan.innerHTML = '$' + budget;
+        budgetSpan.style.display = 'inline';
+
+        budgetSpan.addEventListener('click', () => {
+            toggleAddBudget(dayNumber);
+        });
+       
+    }
+}
+
+const toggleAddBudget = dayNumber => {
+    let budgetSpan = document.getElementById(`${dayNumber}-budget-span`);
+    let budgetInput = document.getElementById(`${dayNumber}-budget-input`);
+    let enterBudgetButton = document.getElementById(`${dayNumber}-add-budget-button`);
+    if (budgetSpan.style.display === 'inline') {
+        // budget is currently displayed, change to edit display
+        budgetSpan.style.display = 'none';
+        budgetInput.style.display = 'inline';
+        budgetInput.value = budgetSpan.innerHTML.slice(1);
+
+        enterBudgetButton.style.display = 'block';
+    } else {
+        // change back to normal display
+        budgetSpan.innerHTML = '$' + budgetInput.value 
+        budgetInput.style.display = 'none';
+        budgetSpan.style.display = 'inline';
+
+        enterBudgetButton.style.display = 'none';
+    }
 }
 
 const activateClearLandmarksButton = (tripId, dayNumber) => {
