@@ -34,8 +34,9 @@
                     </div>
                     <section class="budget-section" id="{{ i }}-budget-section">
                         <div class="budget-flex">
-                            <span>Day Budget: </span>
-                            <input type="number" class="budget-input">
+                            <span id="{{ i }}-day-budget-tag">Day Budget: </span>
+                            <span id="{{ i }}-budget-span" class="budget-span"></span>
+                            <input id="{{ i }}-budget-input" min="0" type="number" class="budget-input">
                         </div>
                         <button class="btn btn-primary add-budget" id="{{ i }}-add-budget-button">Enter Budget</button>
                     </section>
@@ -84,6 +85,9 @@
                    
 
                 </div>
+            </div>
+            <div class="day-details-div" id="{{ i }}-day-details-div">
+
             </div>
          
     {% endfor %} 
