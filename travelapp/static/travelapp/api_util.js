@@ -94,3 +94,13 @@ export const deleteSoloTripLandmarks = async (tripId, dayNumber) => {
     const result = response.json();
     return result;
 }
+
+export const addDayBudget = async (tripId, dayNumber, data) => {
+    const response = await fetch(`/add_day_budget/${tripId}/${dayNumber}`, {
+        method: 'POST',
+        headers: {'X-CSRFToken': csrftoken},
+        body: JSON.stringify(data)
+    });
+    const result = response.json();
+    return result;
+}
