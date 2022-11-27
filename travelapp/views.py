@@ -15,8 +15,20 @@ from .models import User, SoloTrip, SoloDayItinerary, SoloVisitLandmark
 def index(request):
     return render(request, "travelapp/index.html")
 
-def add_day_budget(request, solo_day_itinerary_id):
-    pass 
+def add_day_budget(request, trip_id, day_number):
+    budget = int(json.loads(request.body))
+    
+    day_itinerary = SoloDayItinerary.objects.get(trip=trip_id, day_number=day_number)
+    if budget >= 0:
+        day_itinerary.day_budget = budget
+        day_itinerary.save()
+        response = json.dumps('Success')
+        return HttpResponse(response, content_type="application/json")
+    else: 
+        response = json.dumps("Invalid Entry")
+        return HttpResponse(response, content_type="application/json")
+    
+    
 
 def solo_visit_trip_landmarks(request, trip_id, day_number):
     landmarks = SoloVisitLandmark.objects.filter(trip=trip_id)
@@ -72,7 +84,8 @@ def solo_day_itineraries(request, trip_id):
     day_itineraries = trip.daily_itinerary.all()
     response = {}
     for itinerary in day_itineraries:
-        response[itinerary.day_number] = itinerary.itinerary 
+        response[itinerary.day_number] = itinerary.itinerary
+        response[f'budget_{itinerary.day_number}'] = itinerary.day_budget
     
     json_string = json.dumps(response)
 
