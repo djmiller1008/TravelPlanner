@@ -9,6 +9,7 @@ textarea {
 
 p {
     margin-bottom: 0 !important;
+    margin-right: 1rem;
 }
 
 li {
@@ -57,7 +58,6 @@ ul {
     height: 25rem;
     border: 5px solid black;
     border-radius: 15px;
-    padding: 0.25rem;
 }
 
 .benefit-details {
@@ -119,6 +119,7 @@ ul {
 
 .destination-info {
     width: 50%;
+    margin-right: 2rem;
 }
 
 .container {
@@ -160,6 +161,7 @@ ul {
 
 .trip-details-header {
     margin-bottom: 1.5rem;
+    margin-left: 1rem;
 }
 
 .trip-info-section {
@@ -172,14 +174,21 @@ ul {
 }
 
 .interesting-place-info {
-    width: 75%;
     word-wrap: break-word;
-    margin-right: 4rem;
+    margin-right: 1rem;
 }
 
 .interesting-place-image {
     margin-right: 1.5rem;
 }
+
+.discover-interesting-place-show {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.discover-interesting-place-show > * { margin-bottom: 1rem; }
 
 .interesting-place-show {
     display: flex;
@@ -218,6 +227,9 @@ ul {
     margin: auto;
 }
 
+.create-trip-button {
+    margin: 1rem;
+}
 
 .add-itinerary-button {
     display: none;
@@ -307,7 +319,7 @@ ul {
 
 .itinerary-content {
     display: none;
-    margin-left: 0.5rem;
+    margin-left: 1rem;
 }
 
 .button-and-loading {
@@ -317,7 +329,7 @@ ul {
 
 .trip-page-landmark-info-div {
     display: none;
-    margin-left: 0.5rem;
+    margin-left: 1rem;
 }
 
 .trip-page-interesting-place-info {
@@ -328,6 +340,12 @@ ul {
 .landmarks-to-visit {
     text-align: center;
     display: none;
+    margin-left: 2rem;
+}
+
+.discover-interesting-place-info {
+    align-self: center;
+    margin-right: auto;
 }
 
 .add-landmark-button {
