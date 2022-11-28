@@ -89,8 +89,12 @@ export const getSoloTripLandmarks = async (tripId, dayNumber) => {
     return result;
 }
 
-export const deleteSoloTripLandmarks = async (tripId, dayNumber) => {
-    const response = await fetch(`/delete_solo_trip_landmarks/${tripId}/${dayNumber}`);
+export const deleteSoloTripLandmark = async (tripId, dayNumber, name) => {
+    const response = await fetch(`/delete_solo_trip_landmark/${tripId}/${dayNumber}`, {
+        method: 'DELETE',
+        headers: {'X-CSRFToken': csrftoken},
+        body: JSON.stringify(name)
+    });
     const result = response.json();
     return result;
 }
