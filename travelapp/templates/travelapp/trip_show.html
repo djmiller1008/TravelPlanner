@@ -52,7 +52,6 @@
                     </section>
                     <div class="button-and-loading">
                         <button id="{{ i }}-add-landmark-button" class="btn btn-primary add-landmark-button">Add Landmark</button>
-                        <button id="{{ i }}-clear-landmarks-button" class="btn btn-danger clear-landmarks-button">Clear</button>
                         <span id="{{ i }}-landmarks-error" class="landmarks-error"></span>
                     </div>
                 </div>
@@ -71,21 +70,27 @@
                             </div>
                             
                         </div>
-                       
-                        <div class="trip-page-landmark-info-div">
-                            <div id="loading" class="itinerary-landmark-info-loading"></div>
-                            <section id="{{ i }}-interesting-place-section" class="interesting-place-info trip-page-interesting-place-info">
-                                <div id="{{ i }}-interesting-place-show">
                         
-                                </div>
-                                <button id="{{ i }}-create-visit-landmark-button" class="btn btn-primary create-visit-landmark-button">Add to Itinerary</button>
-                            </section>
-                        </div>
+                        
                     </div>
-                   
-
+                    <div id="loading" class="itinerary-landmark-info-loading"></div>
                 </div>
             </div>
+            <div id="{{ i }}-trip-page-landmark-info-div" class="trip-page-landmark-info-div">
+                <section id="{{ i }}-interesting-place-section" class="interesting-place-info trip-page-interesting-place-info">
+                    <div class="flex">
+                        <h1 id="{{ i }}-interesting-place-h1"></h1>
+                        <span id="{{ i }}-close-landmark-info" class="close-landmark-info">&times;</span>
+                        <button id="{{ i }}-create-visit-landmark-button" class="btn btn-primary create-visit-landmark-button">Add to Itinerary</button>
+                    </div>
+                    <div id="{{ i }}-interesting-place-show" class="interesting-place-show">
+                        
+                        
+                    </div>
+                    
+                </section>
+            </div>
+            
          
     {% endfor %} 
 
