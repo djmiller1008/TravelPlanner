@@ -5,7 +5,7 @@ import * as MAINUtil from './main.js';
 const radius = 1000;
 
 // Limit for interesting places search results
-const pageLength = 8;
+const pageLength = 4;
 
 // Define variables for latitude and longitude
 let lat;
@@ -27,9 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
     getDayItineraries(tripId).then(itineraries => populateItineraries(days, itineraries, tripId));
     activateModal(tripId);
 
-    // Add listeners to create landmark buttons
-    activateCreateLandmarkButtons(tripId);
-
 
 
     // If the user clicks the modal, close the modal
@@ -41,27 +38,66 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-const activateCreateLandmarkButtons = (tripId) => {
-    let buttons = document.getElementsByClassName('btn btn-primary create-visit-landmark-button');
-    Array.from(buttons).forEach(button => {
-        button.addEventListener('click', async () => {
-            const h1 = document.getElementById('interesting-place-h1');
-            const dayNumber = parseInt(h1.parentElement.id[0]);
+const activateCreateLandmarkButton = (tripId, dayNumber) => {
+    let button = document.getElementById(`${dayNumber}-create-visit-landmark-button`);
+    button.addEventListener('click', async () => {
+        const h1 = document.getElementById(`${dayNumber}-interesting-place-h1`);
+        const landmarkName = h1.innerHTML;
+        let landmarksUl = document.getElementById(`${dayNumber}-landmarks-to-visit-ul`);
+        let landmarkElements = landmarksUl.childNodes;
+        let alreadyAdded = false;
+        landmarkElements.forEach(li => {
+            if (li.innerHTML === landmarkName) {
+            alreadyAdded = true;
+            }
+        })
+        if (alreadyAdded) {
+            let result = await APIUtil.deleteSoloTripLandmark(tripId, dayNumber, landmarkName);
+            if (result === 'Success') {
+                await addLandmarksToVisit(tripId, dayNumber);
+                setCreateSoloLandmarkButton(dayNumber);
+            }
+        } else {
             const data = {
-                name: h1.innerHTML,
+                name: landmarkName,
                 xid: h1.dataset.xid,
-                day_number: h1.parentElement.id[0],
+                day_number: dayNumber,
                 trip_id: tripId
             }
             let result = await APIUtil.addSoloTripLandmark(data);
-
+    
             // Landmark has been successfully added
-           
-            if (result === h1.innerHTML) {
-                addLandmarksToVisit(tripId, dayNumber);
+               
+            if (result === landmarkName) {
+                await addLandmarksToVisit(tripId, dayNumber);
+                setCreateSoloLandmarkButton(dayNumber);
             }
-        })
+        }
+        
+        
+    
     })
+}
+
+const setCreateSoloLandmarkButton = dayNumber => {
+    let button = document.getElementById(`${dayNumber}-create-visit-landmark-button`);
+    let h1 = document.getElementById(`${dayNumber}-interesting-place-h1`);
+    let landmarksUl = document.getElementById(`${dayNumber}-landmarks-to-visit-ul`);
+    let landmarkElements = landmarksUl.childNodes;
+    let alreadyAdded = false;
+    landmarkElements.forEach(li => {
+        if (li.innerHTML === h1.innerHTML) {
+           alreadyAdded = true;
+        }
+    })
+
+    if (alreadyAdded) {
+        button.className = 'btn btn-danger create-visit-landmark-button';
+        button.innerHTML = 'Remove From Itinerary';
+    } else {
+        button.className = 'btn btn-primary create-visit-landmark-button';
+        button.innerHTML = 'Add To Itinerary';
+    }
 }
 
 const activatePagButtons = dayNumber => {
@@ -133,20 +169,24 @@ const populateItineraries = (days, itineraries, tripId) => {
         if (itinerarySectionInfo === undefined) {
             addCreateItineraryButton(dayNumber);
         } else {
-            itinerarySection.append(itinerarySectionInfo); 
-            
-        }
-        addLandmarksToVisit(tripId, dayNumber);
+            // User has already entered an itinerary
+            // Display landmark and budget sections
 
+            itinerarySection.append(itinerarySectionInfo);
+            
+            let budget = itineraries[`budget_${dayNumber}`];
+            displayBudget(dayNumber, budget); 
+
+            addLandmarksToVisit(tripId, dayNumber);
+        }
+        
         // Activate these buttons only once 
 
         // Activate add landmark button
         activateAddLandmarkButton(dayNumber);
          // Activate next and previous buttons
         activatePagButtons(dayNumber);
-        // Activate clear landmarks button
-        activateClearLandmarksButton(tripId, dayNumber);
-
+        
          // Activate submit edit button
          let submitButton = document.getElementById(`${dayNumber}-submit-edit-button`);
          activateSubmitEditButton(dayNumber, submitButton);
@@ -157,12 +197,38 @@ const populateItineraries = (days, itineraries, tripId) => {
 
          // Activate add budget button
          activateEnterBudgetButton(tripId, dayNumber);
+        
+         // Activate edit budget span
+         activateEditBudget(dayNumber);
 
-         // Display budget if there is one, display an input if not
-         let budget = itineraries[`budget_${dayNumber}`];
-         displayBudget(dayNumber, budget);
+         // Add listener to create landmark button
+        activateCreateLandmarkButton(tripId, dayNumber);
 
+        // Activate close landmark info button
+        activateCloseLandmarkInfoButton(dayNumber);
     })
+}
+
+const activateCloseLandmarkInfoButton = dayNumber => {
+    let closeLandmarkInfoButton = document.getElementById(`${dayNumber}-close-landmark-info`);
+    closeLandmarkInfoButton.addEventListener('click', () => {
+        let landmarkContentDiv = document.getElementById(`${dayNumber}-landmark-area-content`);
+        if (landmarkContentDiv.style.display === 'flex') {
+            // List of landmarks is also open, use cancelAddLandmark to close list and info section and toggle add landmark button
+            toggleAddLandmarkButton(dayNumber);
+            cancelAddLandmark(dayNumber);
+        } else {
+            // List of landmarks is not open, just close the info section
+            toggleInterestingPlaceInfoSection(dayNumber);
+        }
+    })
+}
+
+const activateEditBudget = dayNumber => {
+    let budgetSpan = document.getElementById(`${dayNumber}-budget-span`);
+    budgetSpan.addEventListener('click', () => {
+        toggleAddBudget(dayNumber);
+    });
 }
 
 const activateEnterBudgetButton = (tripId, dayNumber) => {
@@ -192,16 +258,22 @@ const activateEnterBudgetButton = (tripId, dayNumber) => {
 }
 
 const displayBudget = (dayNumber, budget) => {
-    if (budget > 0) {
-        // User has entered a budget, display it and add a click listener to edit the budget
+    let budgetSection = document.getElementById(`${dayNumber}-budget-section`);
+    budgetSection.style.display = 'block';
+   
+    if (budget > 0 && budget !== '') {
+        // User has entered a budget, display it 
         let budgetSpan = document.getElementById(`${dayNumber}-budget-span`);
         budgetSpan.innerHTML = '$' + budget;
         budgetSpan.style.display = 'inline';
 
-        budgetSpan.addEventListener('click', () => {
-            toggleAddBudget(dayNumber);
-        });
-       
+        
+    } else {
+        let budgetInput = document.getElementById(`${dayNumber}-budget-input`);
+        budgetInput.style.display = 'inline';
+
+        let addBudgetButton = document.getElementById(`${dayNumber}-add-budget-button`);
+        addBudgetButton.style.display = 'block';
     }
 }
 
@@ -226,42 +298,55 @@ const toggleAddBudget = dayNumber => {
     }
 }
 
-const activateClearLandmarksButton = (tripId, dayNumber) => {
-    let clearLandmarksButton = document.getElementById(`${dayNumber}-clear-landmarks-button`);
-    clearLandmarksButton.addEventListener('click', async () => {
-        const response = await APIUtil.deleteSoloTripLandmarks(tripId, dayNumber);
-        if (response === 'Success') {
-            addLandmarksToVisit(tripId, dayNumber);
-        } 
-    }) 
-}
-
-const showClearLandmarksButton = dayNumber => {
-    let clearLandmarksButton = document.getElementById(`${dayNumber}-clear-landmarks-button`);
-    clearLandmarksButton.style.display = 'block';
-}
-
-const hideClearLandmarksButton = dayNumber => {
-    let clearLandmarksButton = document.getElementById(`${dayNumber}-clear-landmarks-button`);
-    clearLandmarksButton.style.display = 'none';
-}
-
 const addLandmarksToVisit = async (tripId, dayNumber) => {
+    // Display container div
+    displayLandmarkArea(dayNumber);
+
     const landmarksToVisit = await APIUtil.getSoloTripLandmarks(tripId, dayNumber);
+    
     let landmarksToVisitContent = document.getElementById(`${dayNumber}-landmarks-to-visit-content`);
     let ul = document.getElementById(`${dayNumber}-landmarks-to-visit-ul`);
     ul.innerHTML = '';
     if (Object.keys(landmarksToVisit).length > 0 && landmarksToVisit !== 'None') {
         Object.keys(landmarksToVisit).forEach(name => {
+            let xid = landmarksToVisit[name];
             let li = document.createElement('li');
             li.innerHTML = name;
+             
+            
+            li.addEventListener('click', async () => {
+                let showDiv = document.getElementById(`${dayNumber}-interesting-place-show`);
+                showDiv.innerHTML = '';
+                displayInfoLoading();
+                const interestingPlaceInfo = await APIUtil.getInterestingPlaceInfo(xid);
+                hideInfoLoading();
+                let h1 = document.getElementById(`${dayNumber}-interesting-place-h1`);
+                h1.innerHTML = interestingPlaceInfo.name;
+                h1.dataset.xid = interestingPlaceInfo.xid;
+                
+
+                if (interestingPlaceInfo.preview) {
+                    let img = document.createElement('img');
+                    img.src = interestingPlaceInfo.preview.source;
+                    img.className = 'interesting-place-image';
+                    showDiv.appendChild(img);
+                }
+
+                // From opentripmap documentation, checks for possible descriptions 
+                showDiv.innerHTML += interestingPlaceInfo.wikipedia_extracts
+                ? interestingPlaceInfo.wikipedia_extracts.html
+                : interestingPlaceInfo.info
+                ? interestingPlaceInfo.info.descr
+                : "No description";
+
+                displayInterestingPlaceInfoSection(dayNumber);
+                })
+
             ul.appendChild(li);
         })
         landmarksToVisitContent.appendChild(ul);
-        showClearLandmarksButton(dayNumber);
-    } else {
-        hideClearLandmarksButton(dayNumber);
-    }
+        
+    } 
 }
 
 const formatItinerary = (dayNumber, itinerary) => {
@@ -388,19 +473,20 @@ const activateAddLandmarkButton = async dayNumber => {
     landmarkButton.addEventListener('click', async () => {
         
         if (document.getElementById(`${dayNumber}-interesting-places-list`).querySelector('li') === null) {
-            toggleAddLandmarkButton(landmarkButton, dayNumber);
+            toggleAddLandmarkButton(dayNumber);
             toggleLandmarkContentArea(dayNumber);
             await displayInterestingPlacesList(dayNumber);
             
         } else {
             cancelAddLandmark(dayNumber);
-            toggleAddLandmarkButton(landmarkButton);
+            toggleAddLandmarkButton(dayNumber);
         }
         
     })
 }
 
-const toggleAddLandmarkButton = (landmarkButton) => {
+const toggleAddLandmarkButton = dayNumber => {
+    let landmarkButton = document.getElementById(`${dayNumber}-add-landmark-button`);
     if (landmarkButton.innerHTML === 'Add Landmark') {
         landmarkButton.className = 'btn btn-danger add-landmark-button';
         landmarkButton.innerHTML = 'Cancel';
@@ -419,6 +505,13 @@ const cancelAddLandmark = dayNumber => {
     let previousButton = document.getElementById(`${dayNumber}-previous-button`);
     nextButton.style.visibility = 'hidden';
     previousButton.style.visibility = 'hidden';
+
+    let landmarkInfoSection = document.getElementById(`${dayNumber}-interesting-place-section`);
+    if (landmarkInfoSection.style.display === 'block') {
+        toggleInterestingPlaceInfoSection(dayNumber);
+    }
+
+   
 }
 
 const displayInterestingPlacesList = async dayNumber => {
@@ -461,22 +554,20 @@ const createInterestingPlaceItem = (item, dayNumber) => {
     li.className = 'list-group-item list-places';
 
     li.addEventListener('click', async () => {
-        
-        toggleInterestingPlaceInfoSection(dayNumber);
         let showDiv = document.getElementById(`${dayNumber}-interesting-place-show`);
         showDiv.innerHTML = '';
         displayInfoLoading();
         const interestingPlaceInfo = await APIUtil.getInterestingPlaceInfo(item.properties.xid);
         hideInfoLoading();
-        let h1 = document.createElement('h1');
-        h1.id = `interesting-place-h1`;
+        let h1 = document.getElementById(`${dayNumber}-interesting-place-h1`);
         h1.innerHTML = interestingPlaceInfo.name;
         h1.dataset.xid = interestingPlaceInfo.xid;
-        showDiv.appendChild(h1);
+        
 
         if (interestingPlaceInfo.preview) {
             let img = document.createElement('img');
             img.src = interestingPlaceInfo.preview.source;
+            img.className = 'interesting-place-image';
             showDiv.appendChild(img);
         }
 
@@ -487,32 +578,41 @@ const createInterestingPlaceItem = (item, dayNumber) => {
         ? interestingPlaceInfo.info.descr
         : "No description";
 
-        let section = document.getElementById(`${dayNumber}-interesting-place-section`);
-        section.style.display = 'block';
+        displayInterestingPlaceInfoSection(dayNumber);
 
     })
     return li;
 }
 
-export const displayInfoLoading = () => {
+const displayInterestingPlaceInfoSection = dayNumber => {
+    let interestingPlaceInfoSection = document.getElementById(`${dayNumber}-interesting-place-section`);
+    interestingPlaceInfoSection.style.display = 'block';
+    setCreateSoloLandmarkButton(dayNumber);
+}
+
+const displayInfoLoading = () => {
     const loadingDiv = document.getElementsByClassName('itinerary-landmark-info-loading')[0];
     loadingDiv.classList.add('display');   
 }
 
-export const hideInfoLoading = () => {
+const hideInfoLoading = () => {
     const loadingDiv = document.getElementsByClassName('itinerary-landmark-info-loading')[0];
     loadingDiv.classList.remove('display');
 }
 
 const toggleInterestingPlaceInfoSection = dayNumber => {
     let section = document.getElementById(`${dayNumber}-interesting-place-section`);
-    if (section.style.displaydisplay === 'none' !== section.style.display === '') {
+    if (section.style.display === 'none' || section.style.display === '') {
         section.style.display = 'block';
     } else {
         section.style.display = 'none';
     }
 }
 
+const displayLandmarkArea = dayNumber => {
+    let landmarksToVisitDiv = document.getElementById(`${dayNumber}-landmarks-to-visit`);
+    landmarksToVisitDiv.style.display = 'block';
+}
 
 const populateItineraryAfterCreation = (itinerarySection, dayNumber) => {
     // Hide create itinerary buttons
@@ -522,6 +622,13 @@ const populateItineraryAfterCreation = (itinerarySection, dayNumber) => {
     // Remove textarea from creation form
     let textarea = document.getElementById(`${dayNumber}-add-itinerary-textarea`)
     textarea.remove();
+
+    // Display budget area
+    displayBudget(dayNumber);
+
+    // Display landmark area
+    displayLandmarkArea(dayNumber);
+    
 }
 
 const formatDisplayAfterEdit = (dayNumber) => {
@@ -640,20 +747,14 @@ const toggleCreateButtonText = dayNumber => {
     }
 }
 
-const toggleBudgetArea = dayNumber => {
-    const budgetSection = document.getElementById(`${dayNumber}-budget-section`);
-    if (budgetSection.style.display === 'flex') {
-        budgetSection.style.display = 'none';
-    } else {
-        budgetSection.style.display = 'flex';
-    }
-}
-
 const toggleItineraryShow = id => {
+    const landmarkInfoDiv = document.getElementById(`${id}-trip-page-landmark-info-div`);
     const itineraryContentDiv = document.getElementById(`${id}-itinerary-content`);
     if (itineraryContentDiv.style.display === 'flex') {
+        landmarkInfoDiv.style.display = 'none';
         itineraryContentDiv.style.display = 'none';
     } else {
         itineraryContentDiv.style.display = 'flex';
+        landmarkInfoDiv.style.display = 'block';
     }
 }
