@@ -1,7 +1,7 @@
 {% extends 'travelapp/layout.html' %} 
 
 {% block body %} 
-    <h1>My Trips</h1>
+    <h1 class="h1-center">My Trips</h1>
 
     {% for trip in trips %} 
         <a href="{% url 'trip_show' trip.id %}" class="list-group-item list-highlight">{{ trip.destination }}</a>
