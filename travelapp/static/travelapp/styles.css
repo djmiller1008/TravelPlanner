@@ -38,13 +38,24 @@ ul {
 
 .home-page-h1 {
     z-index: 1;
-    position: absolute;
     font-weight: 700;
+    position: absolute;
+    width: 100%;
 }
 
 .home-page-h2 {
     font-size: 4rem;
     text-align: center;
+}
+
+.first-line {
+    top: 25%;
+    left: 15%;
+}
+
+.second-line {
+    top: 40%;
+    left: 35%;
 }
 
 .home-page-h3 {
@@ -99,16 +110,6 @@ ul {
 
 .icon-caption {
     font-weight: 600;
-}
-
-.first-line {
-    top: 25%;
-    left: 15%;
-}
-
-.second-line {
-    top: 40%;
-    left: 35%;
 }
 
 .page-container {
@@ -461,5 +462,80 @@ ul {
     }
     to {
         transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .first-line {
+        top: 5%;
+        left: 5%;
+    }
+
+    .second-line {
+        top: 20%;
+        left: 10%;
+        width: 80%; 
+    }
+
+    .home-page-image {
+        height: 20rem;
+    }
+
+    .feature-section {
+        margin: auto;
+        margin-bottom: 2rem;
+    }
+
+    .feature-detail {
+        margin-bottom: 1.5rem;
+        flex-basis: 50%;
+    }
+
+    .icon {
+        font-size: 2rem;
+    }
+
+    .feature-description {
+        flex-wrap: wrap;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+
+    .icon-caption {
+        text-align: center;
+    }
+
+    .track {
+        margin-left: 1rem;
+    }
+
+    .currency {
+        margin-left: 1rem;
+    }
+
+    .discover-benefits {
+        flex-direction: column-reverse;
+        margin: 3rem 1rem 4rem 1rem;
+    }
+
+    .benefit-details {
+        margin: auto;
+        margin-bottom: 1.5rem;
+
+    }
+
+    .discover-image {
+        height: 15rem;
+        width: 100%;
+        border: 3px solid black;
+        border-radius: 3px;
+    }
+
+    .manage-benefits {
+        flex-direction: column;
     }
 }
