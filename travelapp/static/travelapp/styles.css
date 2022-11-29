@@ -178,7 +178,7 @@ ul {
     display: flex;
     justify-content: space-around;
     margin-top: .5rem;
-    width: 21rem;
+    
 }
 
 .search-flex {
@@ -223,7 +223,6 @@ ul {
 
 .interesting-place-info {
     word-wrap: break-word;
-    margin-right: 1rem;
 }
 
 .interesting-place-image {
@@ -349,6 +348,7 @@ ul {
     display: flex;
     flex-direction: column;
     min-width: 10rem;
+    
 }
 
 .landmark-area-div {
@@ -372,6 +372,7 @@ ul {
 .itinerary-content {
     display: none;
     margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 .button-and-loading {
@@ -382,6 +383,7 @@ ul {
 .trip-page-landmark-info-div {
     display: none;
     margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 .trip-page-interesting-place-info {
@@ -596,6 +598,62 @@ ul {
         width: 75%;
     }
 
+    .itinerary-content {
+        flex-direction: column;
+    }
+
+    .landmarks-to-visit {
+        text-align: start;
+        margin-left: 0;
+    }
+
+    .landmarks-header {
+        text-align: start;
+    }
+
+    .add-landmark-button {
+        margin: 0;
+        align-self: baseline;
+    }
+
+    .landmark-area-div {
+        margin: 0;
+    }
+
+    .list-places {
+        width: 90%;
+    }
+
+    .flex {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .close-landmark-info {
+        margin-bottom: 0.5rem;
+    }
+
+    .interesting-place-show {
+        flex-direction: column;
+    }
+
+    .landmark-area-content {
+        flex-direction: column;
+    }
+
+    .list-and-pag-buttons {
+        margin-top: 1rem;
+    }
+
+    .interesting-place-image {
+        width: 90%;
+        margin: 0;
+    }
+
+    .loading-container {
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
 }
 
 @media (max-width: 650px) {
