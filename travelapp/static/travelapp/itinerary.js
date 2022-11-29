@@ -515,15 +515,15 @@ const cancelAddLandmark = dayNumber => {
 }
 
 const displayInterestingPlacesList = async dayNumber => {
-    // Clear out previous places if any 
-    const interestingPlacesDiv = document.getElementById(`${dayNumber}-interesting-places-list`);
-    
-    interestingPlacesDiv.querySelectorAll('li').forEach(li => li.remove());
 
 
     MAINUtil.displayLoading();
     const result = await APIUtil.searchDestinationRadius(lat, lon, radius, offset, pageLength);
     MAINUtil.hideLoading();
+
+    // Clear out previous places if any 
+    const interestingPlacesDiv = document.getElementById(`${dayNumber}-interesting-places-list`);
+    interestingPlacesDiv.querySelectorAll('li').forEach(li => li.remove());
    
     result.features.forEach(item => {
         if (item.properties.name !== '') {
