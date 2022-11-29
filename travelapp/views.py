@@ -2,7 +2,9 @@
 from django.shortcuts import render
 from django import forms
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.password_validation import validate_password
 from django.db import IntegrityError
+from django.core.exceptions import ValidationError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -244,7 +246,7 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
-
+       
         # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
@@ -255,12 +257,28 @@ def register(request):
 
         # Attempt to create new user
         try:
+            validate_password(password)
             user = User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
             return render(request, "travelapp/register.html", {
                 "message": "Username already taken."
             })
+        except ValueError:
+            return render(request, "travelapp/register.html", {
+                "message": "Invalid Entry"
+            })
+        except ValidationError:
+            if username == '':
+                return render(request, "travelapp/register.html", {
+                    "message": "You must enter a Username"
+                })
+            else:
+                return render(request, "travelapp/register.html", {
+                    "message": "Passwords must be at least 8 characters long and unique"
+                })
+        
+           
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
