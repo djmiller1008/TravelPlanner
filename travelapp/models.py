@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    pass 
+    pass
 
 class SoloTrip(models.Model):
     destination = models.CharField(max_length=30)
