@@ -100,7 +100,8 @@ ul {
 }
 
 .feature-section {
-    margin: 0 10rem 10rem 10rem;
+    margin: auto;
+    margin-bottom: 4rem;
 }
 
 .icon {
@@ -110,6 +111,30 @@ ul {
 
 .icon-caption {
     font-weight: 600;
+}
+
+.form-control {
+    margin-bottom: 0.5rem;
+}
+
+.solo-trip-form {
+    display : flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+    width: 60%;
+}
+
+.start-end-dates-container {
+    width: 100%;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
+}
+
+.date-input-wrapper {
+    margin-bottom: 1rem;
 }
 
 .page-container {
@@ -125,6 +150,8 @@ ul {
 
 .container {
     margin: 1.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .button-section {
@@ -362,7 +389,10 @@ ul {
 .close-landmark-info:hover {
     cursor: pointer;
     color: black;
-    
+}
+
+.date-label {
+    text-align: center;
 }
 
 .trip-loading {
@@ -486,7 +516,6 @@ ul {
     }
 
     .feature-section {
-        margin: auto;
         margin-bottom: 2rem;
     }
 
@@ -538,4 +567,9 @@ ul {
     .manage-benefits {
         flex-direction: column;
     }
+
+    .start-end-dates-container {
+        
+    }
+
 }
