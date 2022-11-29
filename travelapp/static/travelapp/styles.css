@@ -109,12 +109,28 @@ ul {
     text-align: center;
 }
 
+.center-text {
+    text-align: center;
+}
+
 .icon-caption {
     font-weight: 600;
 }
 
 .form-control {
     margin-bottom: 0.5rem;
+}
+
+.login-container {
+    margin-top: 2rem;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
 }
 
 .solo-trip-form {
@@ -286,6 +302,10 @@ ul {
 
 .itinerary-error {
     margin-left: 1rem;
+    color: red;
+}
+
+.error-message {
     color: red;
 }
 
