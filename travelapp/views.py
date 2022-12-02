@@ -134,13 +134,10 @@ def delete_solo_trip(request, trip_id):
     return HttpResponse(success_message, content_type="application/json")
     
 
-
-
-@login_required(login_url='login')
 def discover(request):
     return render(request, "travelapp/discover.html")
 
-@login_required(login_url='login')
+
 def discover_destination(request, name):
     return render(request, "travelapp/discover_destination.html", {
         "name": name
@@ -179,7 +176,7 @@ def plan_solo_trip(request):
             trip_end_date = form.cleaned_data['trip_end_date']
             day_delta = (trip_end_date - trip_start_date).days + 1
             lat = float(request.POST['lat'])
-            lon = float(request.POST['lon'])
+            lon = float(request.POST['lon']) 
             user = request.user 
             if day_delta == number_of_days:
                 new_solo_trip = SoloTrip(destination = destination,
