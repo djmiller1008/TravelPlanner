@@ -1,7 +1,15 @@
 body {
     font-family: 'Roboto Condensed', sans-serif !important;
     font-weight: 600 !important;
+    min-height: 100vh;
+    position: relative;
 }
+
+body::after {
+    content: '';
+    display: block;
+    height: 50px; /* Set same as footer's height */
+  }
 
 textarea {
     font-weight: 600;
@@ -18,6 +26,24 @@ li {
 
 ul {
     padding: 0 !important;
+}
+
+nav {
+    position: sticky !important;
+    width: 100%;
+    top: 0;
+    z-index: 99;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .flex {
@@ -178,7 +204,7 @@ ul {
     display: flex;
     justify-content: space-around;
     margin-top: .5rem;
-    
+    width: 20rem;
 }
 
 .search-flex {
