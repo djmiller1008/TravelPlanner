@@ -11,5 +11,4 @@ jobs:
         pip3 install --user django
         pip3 install selenium
         pip3 install webdriver-manager
-        python3 manage.py runserver
         python3 manage.py test 
