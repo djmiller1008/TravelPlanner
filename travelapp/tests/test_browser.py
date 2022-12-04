@@ -16,14 +16,15 @@ chrome_options = Options()
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument("--disable-dev-shm-usage")
-
 driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=chrome_options)
+
 
 class WebpageTests(unittest.TestCase):
 
     def test_title(self):
-        driver.get('http://127.0.0.1:8000')
+        driver.get(file_uri("travelapp/templates/travelapp/layout.html"))
         self.assertEqual(driver.title, "Travel App")
+        driver.quit()
 
         
 if __name__ == "__main__":
