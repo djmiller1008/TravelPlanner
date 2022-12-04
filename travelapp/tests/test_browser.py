@@ -2,6 +2,7 @@ import os
 import pathlib
 import unittest
 from django.test import LiveServerTestCase
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 from selenium import webdriver
@@ -16,7 +17,7 @@ chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument("--disable-dev-shm-usage")
 
-driver = webdriver.Chrome(executable_path="chromedriver/stable/chromedriver", options=chrome_options)
+driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=chrome_options)
 
 class WebpageTests(unittest.TestCase):
 
