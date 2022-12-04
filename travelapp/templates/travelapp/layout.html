@@ -28,12 +28,12 @@
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'index' %}">Home</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'discover' %}">Discover</a>
+                </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'plan' %}">Plan</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'discover' %}">Discover</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'trips' %}">Trips</a>
@@ -57,6 +57,9 @@
             {% block body %}
             {% endblock %}
         </div>
+        <footer class="footer">
+                <span>Project Developed By David Miller</span>
+        </footer>
     </body>
 </html>
 
