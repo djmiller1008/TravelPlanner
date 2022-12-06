@@ -17,6 +17,9 @@ from .models import User, SoloTrip, SoloDayItinerary, SoloVisitLandmark
 def index(request):
     return render(request, "travelapp/index.html")
 
+def currency(request):
+    return render(request, "travelapp/currency.html")
+
 def add_day_budget(request, trip_id, day_number):
     budget = int(json.loads(request.body))
     
