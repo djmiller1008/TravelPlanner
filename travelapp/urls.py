@@ -18,5 +18,6 @@ urlpatterns = [
     path("add_solo_trip_landmark", views.add_solo_trip_landmark, name="add_solo_trip_landmark"),
     path("solo_visit_trip_landmarks/<int:trip_id>/<int:day_number>", views.solo_visit_trip_landmarks, name="solo_visit_trip_landmarks"),
     path("delete_solo_trip_landmark/<int:trip_id>/<int:day_number>", views.delete_solo_trip_landmark, name="delete_solo_trip_landmark"),
-    path("add_day_budget/<int:trip_id>/<int:day_number>", views.add_day_budget, name="add_day_budget")
+    path("add_day_budget/<int:trip_id>/<int:day_number>", views.add_day_budget, name="add_day_budget"),
+    path("currency", views.currency, name="currency")
 ]
