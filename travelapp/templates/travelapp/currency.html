@@ -1,0 +1,36 @@
+{% extends 'travelapp/layout.html' %} 
+{% load static %}
+
+{% block body %}
+    <div class="main-container">
+        <h1>Currency Converter</h1>
+        <div id="currency-display" class="currency-display">
+            <span class="first-currency-span" id="first-currency-span"></span>
+            <span class="second-currency-span" id="second-currency-span"></span>
+        </div>
+        <div id="currency" class="currency-div">
+            <section class="currency-section">
+                <input class="currency-input" id="currency-1-input" type="number" value="1" min="1">
+                <select class="currency-select" name="currencies-1" id="currencies-1">
+                    <option value="" selected disabled hidden>Choose here</option>
+                </select>
+            </section>
+          
+    
+            
+            <section class="currency-section">
+                <input class="currency-input" id="currency-2-input" type="number" value="1" min="1">
+                <select class="currency-select" name="currencies-2" id="currencies-2">
+                    <option value="" selected disabled hidden>Choose here</option>
+                </select>
+            </section>
+        </div>
+    </div>
+   
+
+
+{% endblock %}
+
+{% block script %}
+    <script type="module" src="{% static 'travelapp/currency.js' %}"></script>
+{% endblock %}
