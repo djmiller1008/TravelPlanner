@@ -538,6 +538,43 @@ footer {
     visibility: visible;
 }
 
+.currency-div {
+    display: flex;
+
+}
+
+.currency-section {
+    display: flex;
+    flex-direction: column;
+    margin-right: 1.5rem;
+}
+
+.currency-input {
+    margin-bottom: 1rem;
+    padding: .25rem;
+}
+
+.currency-select {
+    padding: .25rem;
+}
+
+.currency-display {
+    height: 7rem;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.first-currency-span {
+    opacity: .65;
+}
+
+.second-currency-span {
+    font-size: 2.5rem;
+}
+
+
+
 @keyframes spin {
     from {
         transform: rotate(0deg);
