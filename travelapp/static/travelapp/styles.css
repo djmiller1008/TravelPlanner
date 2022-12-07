@@ -717,6 +717,15 @@ footer {
         margin-top: 0;
         margin-bottom: 1rem;
     }
+
+    .currency-div {
+        flex-direction: column;
+    }
+
+    .currency-section {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
 }
 
 @media (max-width: 650px) {
