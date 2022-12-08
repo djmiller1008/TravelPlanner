@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  db:
+    image: postgres 
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+  web:
+    build:  
+      context: .
+      dockerfile: Dockerfile
+    image: travelprojectimage
+    volumes:
+      - .:/usr/src/app 
+    ports:
+      - "8000:8000" 
+    environment:
+      DATABASE_URL: postgres://postgres@db
+
