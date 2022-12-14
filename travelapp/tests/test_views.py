@@ -84,3 +84,8 @@ class TravelAppViewsTestCase(TestCase):
         c.login(username="Chuck", password="password")
         response = c.get("/plan")
         self.assertEqual(response.status_code, 200)
+
+    def test_currency_page(self):
+        c = Client()
+        response = c.get("/currency")
+        self.assertEqual(response.status_code, 200)
