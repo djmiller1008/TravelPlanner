@@ -13,7 +13,6 @@ import datetime
 import json
 from .models import User, SoloTrip, SoloDayItinerary, SoloVisitLandmark
 
-
 def index(request):
     return render(request, "travelapp/index.html")
 
@@ -169,8 +168,8 @@ def trip_show(request, pk):
 def plan_solo_trip(request):
     
     if request.method == "POST":
+      
         form = NewSoloTripForm(request.POST)
-        
         if form.is_valid():
             destination = form.cleaned_data['destination']
             number_of_days = form.cleaned_data['number_of_days']
