@@ -68,6 +68,60 @@ class TravelAppViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["message"], "Invalid username and/or password.")
 
+    def test_logout(self):
+        self.client.login(username="Chuck", password="password")
+        response = self.client.get("/logout")
+        self.assertRedirects(response, "/")
+
+
+    def test_register(self):
+        response = self.client.get("/register")
+        self.assertEqual(response.status_code, 200)
+
+    def test_valid_register(self):
+        response = self.client.post("/register", {"username": "Bob",
+                                        "email": "b@b.com",
+                                        "password": "g1h2j3k4",
+                                        "confirmation": "g1h2j3k4"})
+
+        self.assertRedirects(response, "/")
+
+    def test_password_match(self):
+        response = self.client.post("/register", {"username": "Bob",
+                                    "email": "b@b.com",
+                                    "password": "g1h2j3k4",
+                                    "confirmation": "a1s2d3f4"})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["message"], "Passwords must match")
+
+    def test_username_already_taken(self):
+        response = self.client.post("/register", {"username": "Chuck",
+                                                "email": "c@c.com",
+                                                "password": "g1h2j3k4",
+                                                "confirmation": "g1h2j3k4"})
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["message"], "Username already taken")
+
+    def test_register_with_no_username(self):
+        response = self.client.post("/register", {"username": "",
+                                                "email": "c@c.com",
+                                                "password": "g1h2j3k4",
+                                                "confirmation": "g1h2j3k4"})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["message"], "You must enter a Username")
+
+    def test_register_with_bad_password(self):
+        response = self.client.post("/register", {"username": "Bob",
+                                                "email": "c@c.com",
+                                                "password": "g1h2",
+                                                "confirmation": "g1h2"})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["message"], "Passwords must be at least 8 characters long and unique")
+
     def test_discover_page(self):
         response = self.client.get("/discover")
         self.assertEqual(response.status_code, 200)
@@ -138,3 +192,11 @@ class TravelAppViewsTestCase(TestCase):
         
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['message'], "Invalid Entry")
+
+    def test_delete_solo_trip(self):
+        self.client.login(username="Chuck", password="password")
+        trip = SoloTrip.objects.get(pk=1)
+
+        response = self.client.get(f"/delete_solo_trip/{trip.id}")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(SoloTrip.objects.filter(pk=1).exists(), False)
