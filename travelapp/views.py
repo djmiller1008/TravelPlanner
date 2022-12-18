@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import datetime 
 import json
+import pdb
 from .models import User, SoloTrip, SoloDayItinerary, SoloVisitLandmark
 
 def index(request):
@@ -19,6 +20,7 @@ def index(request):
 def currency(request):
     return render(request, "travelapp/currency.html")
 
+@login_required(login_url='login')
 def add_day_budget(request, trip_id, day_number):
     budget = int(json.loads(request.body))
     
@@ -33,7 +35,7 @@ def add_day_budget(request, trip_id, day_number):
         return HttpResponse(response, content_type="application/json")
     
     
-
+@login_required(login_url='login')
 def solo_visit_trip_landmarks(request, trip_id, day_number):
     landmarks = SoloVisitLandmark.objects.filter(trip=trip_id)
     if landmarks.exists() == False:
@@ -47,7 +49,8 @@ def solo_visit_trip_landmarks(request, trip_id, day_number):
     
         json_string = json.dumps(response)
         return HttpResponse(json_string, content_type="application/json")
-    
+
+@login_required(login_url='login')
 def delete_solo_trip_landmark(request, trip_id, day_number):
     landmark_name = json.loads(request.body)
     day_itinerary = SoloDayItinerary.objects.get(trip=trip_id, day_number=day_number)
@@ -61,7 +64,7 @@ def delete_solo_trip_landmark(request, trip_id, day_number):
         return HttpResponse(json_string, content_type="application/json")
     
     
-
+@login_required(login_url='login')
 def add_solo_trip_landmark(request):
     json_dict = json.loads(request.body)
     name = json_dict['name']
@@ -83,7 +86,7 @@ def add_solo_trip_landmark(request):
     json_string = json.dumps(new_solo_visit_landmark.name)
     return HttpResponse(json_string, content_type="application/json")
 
-
+@login_required(login_url='login')
 def solo_day_itineraries(request, trip_id):
     trip = SoloTrip.objects.get(pk=trip_id)
     day_itineraries = trip.daily_itinerary.all()
@@ -96,6 +99,7 @@ def solo_day_itineraries(request, trip_id):
 
     return HttpResponse(json_string, content_type="application/json")
 
+@login_required(login_url='login')
 def add_solo_day_itinerary(request):
     json_dict = json.loads(request.body)
     day_number = json_dict['day_number']
@@ -113,6 +117,7 @@ def add_solo_day_itinerary(request):
 
     return HttpResponse(json_string, content_type="application/json")
 
+@login_required(login_url='login')
 def edit_solo_day_itinerary(request):
     json_dict = json.loads(request.body)
     day_number = json_dict['day_number']
@@ -129,6 +134,7 @@ def edit_solo_day_itinerary(request):
 
     return HttpResponse(json_string, content_type="application/json")
 
+@login_required(login_url='login')
 def delete_solo_trip(request, trip_id):
     trip = SoloTrip.objects.get(pk=trip_id)
     trip.delete()
@@ -250,10 +256,13 @@ def register(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
-            return render(request, "travel/register.html", {
-                "message": "Passwords must match."
+            return render(request, "travelapp/register.html", {
+                "message": "Passwords must match"
             })
-
+        if username == '':
+            return render(request, "travelapp/register.html", {
+                "message": "You must enter a Username"
+            })
         # Attempt to create new user
         try:
             validate_password(password)
@@ -261,23 +270,12 @@ def register(request):
             user.save()
         except IntegrityError:
             return render(request, "travelapp/register.html", {
-                "message": "Username already taken."
-            })
-        except ValueError:
-            return render(request, "travelapp/register.html", {
-                "message": "Invalid Entry"
+                "message": "Username already taken"
             })
         except ValidationError:
-            if username == '':
-                return render(request, "travelapp/register.html", {
-                    "message": "You must enter a Username"
-                })
-            else:
-                return render(request, "travelapp/register.html", {
-                    "message": "Passwords must be at least 8 characters long and unique"
-                })
-        
-           
+            return render(request, "travelapp/register.html", {
+                "message": "Passwords must be at least 8 characters long and unique"
+            })  
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
