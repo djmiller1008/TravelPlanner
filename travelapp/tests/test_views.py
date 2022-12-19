@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from ..models import SoloTrip, User, SoloDayItinerary, SoloVisitLandmark 
 import pdb
+import json 
 
 class TravelAppViewsTestCase(TestCase):
 
@@ -54,6 +55,12 @@ class TravelAppViewsTestCase(TestCase):
                                                             number_of_days=11,
                                                             lat=48.8566,
                                                             lon=2.3522) 
+
+        self.trip_itinerary = SoloDayItinerary.objects.create(day_number=1,
+                                                            trip=self.valid_trip1,
+                                                            itinerary="Arrive at the airport",
+                                                            day_budget=200)
+        
 
     def test_index(self):
         response = self.client.get("/")
@@ -200,3 +207,66 @@ class TravelAppViewsTestCase(TestCase):
         response = self.client.get(f"/delete_solo_trip/{trip.id}")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(SoloTrip.objects.filter(pk=1).exists(), False)
+
+    def test_add_solo_day_itinerary(self):
+        self.client.login(username="Chuck", password="password")
+        body = {
+            "day_number": 2,
+            "trip_id": 1,
+            "itinerary": "Check into the hotel"
+        }
+        response = self.client.post("/add_solo_day_itinerary", 
+                            body,
+                            content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        itinerary = SoloDayItinerary.objects.get(pk=2)
+        self.assertEqual(itinerary.itinerary, "Check into the hotel")
+        self.assertEqual(itinerary.day_number, 2)
+
+    def test_edit_solo_day_itinerary(self):
+        self.client.login(username="Chuck", password="password")
+        body = {
+            "day_number": 1,
+            "trip_id": 1,
+            "itinerary": "Editted itinerary"
+        }
+        response = self.client.post("/edit_solo_day_itinerary", body,
+                                    content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        itinerary = SoloDayItinerary.objects.get(pk=1)
+        self.assertEqual(itinerary.itinerary, "Editted itinerary")
+
+    def test_fetch_itineraries(self):
+        self.client.login(username="Chuck", password="password")
+        response = self.client.get(f"/solo_day_itineraries/{1}")
+        itinerary = json.loads(response.content)
+        self.assertEqual(itinerary, {'1': 'Arrive at the airport', 'budget_1': 200})
+      
+    def test_add_day_budget(self):
+        itinerary = SoloDayItinerary.objects.get(pk=1)
+        self.assertEqual(itinerary.day_budget, 200)
+        self.client.login(username="Chuck", password="password")
+        budget = 1000
+        response = self.client.post(f"/add_day_budget/{self.valid_trip1.id}/1",
+                                    budget,
+                                    content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        itinerary = SoloDayItinerary.objects.get(pk=1)
+
+        self.assertEqual(itinerary.day_budget, 1000)
+
+    def test_invalid_day_budget(self):
+        self.client.login(username="Chuck", password="password")
+        budget = -1000
+        response = self.client.post(f"/add_day_budget/{self.valid_trip1.id}/1",
+                                    budget,
+                                    content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        message = json.loads(response.content)
+        self.assertEqual(message, "Invalid Entry")
+
+    
+        
