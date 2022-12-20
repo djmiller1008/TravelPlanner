@@ -66,7 +66,6 @@ class TravelAppViewsTestCase(TestCase):
                                                                     xid="aaaaaa",
                                                                     name="Temple")
         
-
     def test_index(self):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
@@ -84,7 +83,6 @@ class TravelAppViewsTestCase(TestCase):
         self.client.login(username="Chuck", password="password")
         response = self.client.get("/logout")
         self.assertRedirects(response, "/")
-
 
     def test_register(self):
         response = self.client.get("/register")
@@ -112,7 +110,7 @@ class TravelAppViewsTestCase(TestCase):
                                                 "email": "c@c.com",
                                                 "password": "g1h2j3k4",
                                                 "confirmation": "g1h2j3k4"})
-        
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["message"], "Username already taken")
 
@@ -166,7 +164,6 @@ class TravelAppViewsTestCase(TestCase):
 
     def test_valid_add_solo_trip(self):
         self.client.login(username="Chuck", password="password")
-        
         response = self.client.post("/plan", {"destination": self.valid_trip1.destination, 
                                 "number_of_days": self.valid_trip1.number_of_days,
                                 "budget": self.valid_trip1.budget,
@@ -208,7 +205,6 @@ class TravelAppViewsTestCase(TestCase):
     def test_delete_solo_trip(self):
         self.client.login(username="Chuck", password="password")
         trip = SoloTrip.objects.get(pk=1)
-
         response = self.client.get(f"/delete_solo_trip/{trip.id}")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(SoloTrip.objects.filter(pk=1).exists(), False)
@@ -223,6 +219,7 @@ class TravelAppViewsTestCase(TestCase):
         response = self.client.post("/add_solo_day_itinerary", 
                             body,
                             content_type="application/json")
+
         self.assertEqual(response.status_code, 200)
         itinerary = SoloDayItinerary.objects.get(pk=2)
         self.assertEqual(itinerary.itinerary, "Check into the hotel")
@@ -259,7 +256,6 @@ class TravelAppViewsTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         itinerary = SoloDayItinerary.objects.get(pk=1)
-
         self.assertEqual(itinerary.day_budget, 1000)
 
     def test_invalid_day_budget(self):
@@ -309,6 +305,7 @@ class TravelAppViewsTestCase(TestCase):
         body = json.dumps("Invalid landmark")
         response = self.client.delete(f"/delete_solo_trip_landmark/{self.valid_trip1.id}/1",
                                     body)
+                                    
         self.assertEqual(response.status_code, 200)
         message = json.loads(response.content)
         self.assertEqual(message, "No Landmark Found")
@@ -325,5 +322,4 @@ class TravelAppViewsTestCase(TestCase):
         response = self.client.get(f"/solo_visit_trip_landmarks/{self.valid_trip2.id}/1")
         landmark_data = json.loads(response.content)
         self.assertEqual(response.status_code, 200)
-       
         self.assertEqual(landmark_data, 'None')
