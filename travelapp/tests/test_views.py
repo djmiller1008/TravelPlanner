@@ -60,6 +60,11 @@ class TravelAppViewsTestCase(TestCase):
                                                             trip=self.valid_trip1,
                                                             itinerary="Arrive at the airport",
                                                             day_budget=200)
+
+        self.solo_trip_landmark = SoloVisitLandmark.objects.create(day_itinerary=self.trip_itinerary,
+                                                                    trip=self.valid_trip1,
+                                                                    xid="aaaaaa",
+                                                                    name="Temple")
         
 
     def test_index(self):
@@ -268,5 +273,57 @@ class TravelAppViewsTestCase(TestCase):
         message = json.loads(response.content)
         self.assertEqual(message, "Invalid Entry")
 
-    
+    def test_add_solo_trip_landmark(self):
+        self.client.login(username="Chuck", password="password")
+        body = {
+            "name": "Amazing Landmark",
+            "day_number": 1,
+            "xid": "aaaaaa",
+            "trip_id": self.valid_trip1.id
+        }
+
+        response = self.client.post(f"/add_solo_trip_landmark",
+                        body,
+                        content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        new_landmark = SoloVisitLandmark.objects.get(pk=2)
+        self.assertEqual(new_landmark.name, "Amazing Landmark")
+
+    def test_delete_solo_trip_landmark(self):
+        self.client.login(username="Chuck", password="password")
+        body = json.dumps("Temple")
+        response = self.client.delete(f"/delete_solo_trip_landmark/{self.valid_trip1.id}/1",
+                                    body)
+
+        self.assertEqual(response.status_code, 200)
+      
+        landmark_object = SoloVisitLandmark.objects.filter(name="Temple")
+        self.assertEqual(landmark_object.exists(), False)
+
+        message = json.loads(response.content)
+        self.assertEqual(message, "Success")
         
+    def test_invalid_delete_solo_trip_landmark(self):
+        self.client.login(username="Chuck", password="password")
+        body = json.dumps("Invalid landmark")
+        response = self.client.delete(f"/delete_solo_trip_landmark/{self.valid_trip1.id}/1",
+                                    body)
+        self.assertEqual(response.status_code, 200)
+        message = json.loads(response.content)
+        self.assertEqual(message, "No Landmark Found")
+
+    def test_fetch_solo_trip_landmarks(self):
+        self.client.login(username="Chuck", password="password")
+        response = self.client.get(f"/solo_visit_trip_landmarks/{self.valid_trip1.id}/1")
+        landmark_data = json.loads(response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(landmark_data, {'Temple': 'aaaaaa'})
+
+    def test_fetch_landmarks_with_no_landmarks(self):
+        self.client.login(username="Chuck", password="password")
+        response = self.client.get(f"/solo_visit_trip_landmarks/{self.valid_trip2.id}/1")
+        landmark_data = json.loads(response.content)
+        self.assertEqual(response.status_code, 200)
+       
+        self.assertEqual(landmark_data, 'None')
