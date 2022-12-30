@@ -3,13 +3,6 @@ import * as APIUtil from './currency_api_util.js';
 let exchangeRate;
 let reverseExchangeRate;
 
-// buggy when switching currencies 
-// need to fix
-// debug after switching currencies when already viewing other currencies
-// debug in calculateExchange method
-
-
-
 document.addEventListener("DOMContentLoaded", async () => {
     const select1 = document.getElementById('currencies-1');
     const select2 = document.getElementById('currencies-2');
@@ -55,7 +48,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 const updateFirstCurrencyInput = () => {
-    
     const firstCurrencyInput = document.getElementById('currency-1-input');
     const firstCurrencyInputValue = parseInt(firstCurrencyInput.value);
     const secondCurrencyInput = document.getElementById('currency-2-input');
@@ -65,8 +57,6 @@ const updateFirstCurrencyInput = () => {
     }  else if (!firstCurrencyInputValue) {
         secondCurrencyInput.value = '';
     }
-
-    
 }
 
 const updateSecondCurrencyInput = () => {
