@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const option1 = document.createElement('option');
         const option2 = document.createElement('option');
         if (currencyCode === 'usd') {
-           option1.selected = true;
+            option1.selected = true;
         } else if (currencyCode === 'eur') {
             option2.selected = true;
         }
