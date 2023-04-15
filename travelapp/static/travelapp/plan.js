@@ -1,7 +1,6 @@
 import * as APIUtil from './api_util.js'
 
 document.addEventListener("DOMContentLoaded", () => {
-
     let createButton = document.getElementById('create-trip-button');
     createButton.addEventListener('click', async event => {
         event.preventDefault();
