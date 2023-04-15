@@ -34,7 +34,6 @@ def add_day_budget(request, trip_id, day_number):
         response = json.dumps("Invalid Entry")
         return HttpResponse(response, content_type="application/json")
     
-    
 @login_required(login_url='login')
 def solo_visit_trip_landmarks(request, trip_id, day_number):
     landmarks = SoloVisitLandmark.objects.filter(trip=trip_id)
@@ -225,12 +224,10 @@ class NewSoloTripForm(forms.Form):
 def login_view(request):
     if request.method == "POST":
 
-        # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
 
-        # Check if authentication successful
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
@@ -241,18 +238,23 @@ def login_view(request):
     else:
         return render(request, "travelapp/login.html")
 
+def demo_login(request):
+    username = "demoaccount"
+    password = "demoaccountpassword"
+    user = authenticate(request, username=username, password=password)
+
+    login(request, user)
+    return HttpResponseRedirect(reverse("index"))
 
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
-
 
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
        
-        # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
@@ -263,7 +265,7 @@ def register(request):
             return render(request, "travelapp/register.html", {
                 "message": "You must enter a Username"
             })
-        # Attempt to create new user
+        
         try:
             validate_password(password)
             user = User.objects.create_user(username, email, password)
