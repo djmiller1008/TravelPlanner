@@ -540,7 +540,6 @@ footer {
 
 .currency-div {
     display: flex;
-
 }
 
 .currency-section {
@@ -573,6 +572,17 @@ footer {
     font-size: 2.5rem;
 }
 
+.demo-button {
+    background: none;
+    border: none;
+    font-weight: 600;
+}
+
+.username {
+    display: block;
+    color: rgba(0,0,0,.5);
+    padding: 0.5rem;
+}
 
 
 @keyframes spin {
@@ -732,5 +742,12 @@ footer {
     .discover-page-container {
         flex-direction: column;
         margin: 0.5rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .username {
+        padding-left: 0;
+        padding-right: 0;
     }
 }
