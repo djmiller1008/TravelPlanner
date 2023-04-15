@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-
 class User(AbstractUser):
     pass
 
@@ -23,9 +22,6 @@ class SoloTrip(models.Model):
             return False 
         else:
             return True
-
-
-   
 
 class SoloDayItinerary(models.Model):
     day_number = models.IntegerField(blank=False)
