@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     pass
-
+ 
 class SoloTrip(models.Model):
     destination = models.CharField(max_length=30, blank=False)
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="trips")
@@ -32,7 +32,7 @@ class SoloDayItinerary(models.Model):
 class SoloVisitLandmark(models.Model):
     day_itinerary = models.ForeignKey("SoloDayItinerary", on_delete=models.CASCADE, related_name="landmarks")
     trip = models.ForeignKey("SoloTrip", on_delete=models.CASCADE, related_name="trips")
-    xid = models.CharField(max_length=10, blank=False)
+    xid = models.CharField(max_length=64, blank=False)
     name = models.CharField(max_length=64, blank=False)
     
 
