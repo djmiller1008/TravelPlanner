@@ -11,7 +11,6 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import datetime 
 import json
-import pdb
 from .models import User, SoloTrip, SoloDayItinerary, SoloVisitLandmark
 
 def index(request):
@@ -70,10 +69,10 @@ def add_solo_trip_landmark(request):
     day_number = json_dict['day_number']
     xid = json_dict['xid']
     trip_id = json_dict['trip_id']
-
+    
     trip = SoloTrip.objects.get(pk=trip_id)
     day_itinerary = SoloDayItinerary.objects.get(trip=trip, day_number=day_number)
-
+  
     new_solo_visit_landmark = SoloVisitLandmark(
         day_itinerary=day_itinerary,
         name=name,
