@@ -9,6 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
+
 def file_uri(filename):
     return pathlib.Path(os.path.abspath(filename)).as_uri()
 
@@ -76,8 +77,7 @@ class WebpageTests(StaticLiveServerTestCase):
        
     def test_authorized_visit_to_page(self):
         self.driver.get('%s%s' % (self.live_server_url, '/login'))
-        h1 = self.driver.find_element(By.CLASS_NAME, "h1-center")
-        
+       
         username_input = self.driver.find_element(By.NAME, "username")
         username_input.send_keys('Chuck')
         password_input = self.driver.find_element(By.NAME, "password")
@@ -87,3 +87,5 @@ class WebpageTests(StaticLiveServerTestCase):
         self.driver.get('%s%s' % (self.live_server_url, '/trips'))
         h1 = self.driver.find_element(By.CLASS_NAME, "h1-center")
         self.assertEqual(h1.text, "My Trips")
+
+   
