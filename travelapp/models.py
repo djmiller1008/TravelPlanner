@@ -7,7 +7,7 @@ class User(AbstractUser):
 class SoloTrip(models.Model):
     destination = models.CharField(max_length=30, blank=False)
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="trips")
-    budget = models.IntegerField(default=0)
+    budget = models.IntegerField(default=0, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     trip_start_date = models.DateField(blank=False)
     trip_end_date = models.DateField(blank=False)
