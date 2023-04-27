@@ -6,12 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
         const destination = document.querySelectorAll('input')[1].value;
         const result = await APIUtil.searchDestination(destination);
-        
         if (result.partial_match === true) {
-            alert('Invalid Destination');
+            alert('Destination must be a valid city, region, village, etc.');
             return;
         } else if (result.lat === undefined) {
-            alert('Invalid Destination');
+            alert('Destination must be a valid city, region, village, etc.');
             return;
         } else {
             document.getElementsByName('lat')[0].value = result.lat;
