@@ -4,13 +4,10 @@
 {% block body %}  
 
 <div class="main-container">
-
-
     <h1 class="h1-center">Plan Your Dream Trip!</h1>
 
-    <span> 
+    <span class="error-message"> 
             {{ message }}
-        
     </span>
     
     <form id="trip-form" class="form-group solo-trip-form" action="{% url 'plan' %}" method="post">
@@ -35,13 +32,10 @@
                 {{ trip_form.trip_end_date }}
             </div>
         </div>
-       
         <input type="hidden" name="lat">
         <input type="hidden" name="lon">
         <button id="create-trip-button" class="btn btn-primary create-trip-button">Create Trip</button>
     </form> 
-
-   
 </div>
 
 
