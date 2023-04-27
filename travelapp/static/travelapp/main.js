@@ -5,20 +5,16 @@ const countryNames = new Intl.DisplayNames(
     ['en'], {type: 'region'}
 );
 
-// Initial offset for pagination of intersting places
 let offset = 0;
 
-// Define variables for latitude and longitude
 let lat;
 let lon;
 
 // Keep radius at 1000 meters
 const radius = 1000;
 
-// Limit for interesting places search results
 const pageLength = 8;
 
-// Define variable for keeping track of how many interesting places are returned
 // Using this variable for pagination
 let count;
 
@@ -139,15 +135,12 @@ export const displayInterestingPlacesList = async () => {
     displayLoading();
     interestingPlacesList = await APIUtil.searchDestinationRadius(lat, lon, radius, offset, pageLength);
     hideLoading();
-
     // Clear out previous places if any 
     const interestingPlacesDiv = document.getElementById('interesting-places-list');
     interestingPlacesDiv.innerHTML = '';
 
     interestingPlacesList.features.forEach(item => {
-       
         if (item.properties.name !== '') {
-            
             let li = createInterestingPlaceItem(item);
             interestingPlacesDiv.appendChild(li); 
         }
@@ -157,7 +150,6 @@ export const displayInterestingPlacesList = async () => {
     let previousButton = document.getElementById('previous-button');
 
     if (count > offset + pageLength) {
-       
         nextButton.style.visibility = 'visible';
     } else {
         nextButton.style.visibility = 'hidden';
