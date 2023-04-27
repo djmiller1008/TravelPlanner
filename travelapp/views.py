@@ -170,10 +170,10 @@ def trip_show(request, pk):
 
 @login_required(login_url='login')
 def plan_solo_trip(request):
-    
     if request.method == "POST":
-      
+        
         form = NewSoloTripForm(request.POST)
+
         if form.is_valid():
             destination = form.cleaned_data['destination']
             number_of_days = form.cleaned_data['number_of_days']
@@ -185,6 +185,8 @@ def plan_solo_trip(request):
             lon = float(request.POST['lon']) 
             user = request.user 
             if day_delta == number_of_days:
+                if budget is None:
+                    budget = 0
                 new_solo_trip = SoloTrip(destination = destination,
                                             number_of_days=number_of_days,
                                             budget=budget,
@@ -215,7 +217,7 @@ def plan_solo_trip(request):
 class NewSoloTripForm(forms.Form):
     destination = forms.CharField(label = 'Destination', widget=forms.TextInput(attrs={'class': 'form-control'}))
     number_of_days = forms.IntegerField(min_value=1, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    budget = forms.IntegerField(min_value=1, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    budget = forms.IntegerField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     trip_start_date = forms.DateField(initial=datetime.date.today(), widget=forms.SelectDateWidget())
     trip_end_date = forms.DateField(initial=datetime.date.today() + datetime.timedelta(days=7), widget=forms.SelectDateWidget())
 
@@ -229,7 +231,7 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("trips"))
         else:
             return render(request, "travelapp/login.html", {
                 "message": "Invalid username and/or password."
@@ -278,6 +280,6 @@ def register(request):
                 "message": "Passwords must be at least 8 characters long and unique"
             })  
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("trips"))
     else:
         return render(request, "travelapp/register.html")
