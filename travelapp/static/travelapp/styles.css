@@ -600,6 +600,17 @@ footer {
     justify-content: flex-end;
 }
 
+.no-trips-div {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.my-trips-container {
+    margin-top: 1.5rem;
+}
+
 @keyframes spin {
     from {
         transform: rotate(0deg);
