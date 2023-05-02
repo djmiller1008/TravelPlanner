@@ -154,10 +154,16 @@ def trips(request):
     user = User.objects.get(username=request.user.username)
     
     trips = user.trips.all()
-   
-    return render(request, "travelapp/trips.html", {
-        "trips": trips
+    if len(trips) == 0: 
+        return render(request, "travelapp/trips.html", {
+            "notrips": True,
+            "trips": trips
     })
+    else:
+        return render(request, "travelapp/trips.html", {
+            "notrips": False,
+            "trips": trips
+        })
 
 @login_required(login_url='login')
 def trip_show(request, pk):
