@@ -15,23 +15,15 @@
         <div id="{{ i }}" data-tripid="{{ trip.id }}" data-lat="{{ trip.lat }}" data-lon="{{ trip.lon }}" class="list-group-item list-highlight day-itinerary">Day {{ i }}</div>
             <div id="{{ i }}-itinerary-content" class="itinerary-content">
                 <div id="{{ i }}-div" class="itinerary-flex">
-                    
-                    
-                
                     <section id="{{ i }}-section" class="itinerary-section list-group-item">
-                    
-                        
                     </section>
                     <div id="{{ i }}-create-itinerary-buttons-div" class="create-itinerary-buttons-div">
                         <button class="btn btn-primary itinerary-button add-itinerary-button" id="{{ i }}-add-itinerary-button">Add Itinerary</button>
                         <button id="{{ i }}-submit" class="btn btn-primary submit-itinerary-button itinerary-button">Enter</button>
                     </div>
-                    
                     <div class="edit-buttons-div" id="{{ i }}-edit-buttons-div">
-                        
                         <button id="{{ i }}-cancel-edit-button" class="btn btn-primary cancel-edit-button">Cancel</button>
                         <button id="{{ i }}-submit-edit-button" class="btn btn-primary submit-edit-button">Enter</button>
-                        
                     </div>
                     <section class="budget-section" id="{{ i }}-budget-section">
                         <div class="budget-flex">
@@ -41,8 +33,6 @@
                         </div>
                         <button class="btn btn-primary add-budget" id="{{ i }}-add-budget-button">Enter Budget</button>
                     </section>
-        
-
                 </div>
                 <div class="landmarks-to-visit" id="{{ i }}-landmarks-to-visit">
                     <h4 class="landmarks-header">Landmarks To Visit</h4>
@@ -61,18 +51,13 @@
                     <div id="{{ i }}-landmark-area-content" class="landmark-area-content">
                         <div id="loading" class="trip-loading"></div>
                         <div class="list-and-pag-buttons">
-                            
-                            
                             <div id="{{ i }}-interesting-places-list" class="interesting-places-list">
                                 <section id="button-section" class="button-section">
                                     <button id="{{ i }}-previous-button" class="btn btn-primary previous-button trip-show-pag-button">Previous</button>
                                     <button id="{{ i }}-next-button" class="btn btn-primary next-button trip-show-pag-button">Next</button>
                                 </section>
                             </div>
-                            
                         </div>
-                        
-                        
                     </div>
                     <div class="loading-container">
                         <div id="loading" class="itinerary-landmark-info-loading"></div>
@@ -87,18 +72,12 @@
                         <button id="{{ i }}-create-visit-landmark-button" class="btn btn-primary create-visit-landmark-button">Add to Itinerary</button>
                     </div>
                     <div id="{{ i }}-interesting-place-show" class="interesting-place-show">
-                        
-                        
                     </div>
-                    
                 </section>
             </div>
-            
-         
+
     {% endfor %} 
-
     <button id="delete-trip-modal-button" class="btn btn-danger delete-trip-modal-button">Delete Trip</button>
-
     <div id="delete-trip-modal" class="delete-trip-modal">
         <div class="modal-content">
             <span id="close-modal" class="close-modal">&times;</span>
@@ -108,7 +87,6 @@
                 <button id="not-delete" class="btn btn-primary">No</button>
             </section>
         </div>
-        
     </div>
 {% endblock %} 
 

@@ -1,9 +1,18 @@
 {% extends 'travelapp/layout.html' %} 
 
 {% block body %} 
-    <h1 class="h1-center">My Trips</h1>
+    <div class="my-trips-container">
+        <h1 class="h1-center">My Trips</h1>
 
-    {% for trip in trips %} 
-        <a href="{% url 'trip_show' trip.id %}" class="list-group-item list-highlight">{{ trip.destination }}</a>
-    {% endfor %} 
-{% endblock %} 
+        {% if notrips %}
+            <div class="no-trips-div">
+                <section>You don't have any trips!</section>
+                <a href="{% url 'plan' }">Plan A Trip</a>
+            </div>
+        {% endif %}
+        {% for trip in trips %} 
+            <a href="{% url 'trip_show' trip.id %}" class="list-group-item list-highlight">{{ trip.destination }}</a>
+        {% endfor %} 
+    </div>
+    
+{% endblock %}  
